@@ -1,65 +1,27 @@
-const Header = (props) => {
-  return (
-    <>
-      <h1>{props.course}</h1>
-    </>
-  );
-};
-
-const Part = (props) => {
-  return (
-    <>
-      <p>
-        {props.parts.name} {props.parts.exercises}
-      </p>
-    </>
-  );
-};
-
-const Content = (props) => {
-  return (
-    <>
-      <Part parts={props.parts[0]} />
-      <Part parts={props.parts[1]} />
-      <Part parts={props.parts[2]} />
-    </>
-  );
-};
-
-const Total = (props) => {
-  return (
-    <>
-      <p>Number of exercises {props.parts.reduce((a,c) => a + c.exercises,0)}</p>
-    </>
-  );
-};
+import { useState } from "react";
 
 const App = () => {
-  const course = {
-    name: 'Half Stack application development',
-    parts: [
-      {
-        name: 'Fundamentals of React',
-        exercises: 10
-      },
-      {
-        name: 'Using props to pass data',
-        exercises: 7
-      },
-      {
-        name: 'State of a component',
-        exercises: 14
-      }
-    ]
-  }
+  // save feedback into its own state
+  const [good, setGood] = useState(0);
+  const [neutral, setNeutral] = useState(0);
+  const [bad, setBad] = useState(0);
+
+  const handleGood = () => setGood(good + 1);
+  const handleNeutral = () => setNeutral(neutral + 1);
+  const handleBad = () => setBad(bad + 1);
 
   return (
     <div>
-      <Header course={course.name} />
-      <Content parts={course.parts} />
-      <Total parts={course.parts} />
+      <h1>Feedback</h1>
+      <button onClick={handleGood}>Good</button>
+      <button onClick={handleNeutral}>Neutral</button>
+      <button onClick={handleBad}>Bad</button>
+      <h1>Statistics</h1>
+      <p>good : {good}</p>
+      <p>neutral : {neutral}</p>
+      <p>bad : {bad}</p>
     </div>
-  );
-};
+  )
+}
 
 export default App;
