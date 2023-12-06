@@ -1,5 +1,16 @@
 import { useState } from "react";
 
+const Statistics = (props) => {
+  return (
+    <div>
+      <h1>Statistics</h1>
+      <p>good : {props.good}</p>
+      <p>neutral : {props.neutral}</p>
+      <p>bad : {props.bad}</p>
+    </div>
+  );
+};
+
 const App = () => {
   // save feedback into its own state
   const [good, setGood] = useState(0);
@@ -46,10 +57,7 @@ const App = () => {
       <button onClick={handleGood}>Good</button>
       <button onClick={handleNeutral}>Neutral</button>
       <button onClick={handleBad}>Bad</button>
-      <h1>Statistics</h1>
-      <p>good : {good}</p>
-      <p>neutral : {neutral}</p>
-      <p>bad : {bad}</p>
+      <Statistics good={good} bad={bad} neutral={neutral}/>
       <br />
       <p>All : {total}</p>
       <p>Average : {average}</p>
