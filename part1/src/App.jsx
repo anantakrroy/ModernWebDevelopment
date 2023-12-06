@@ -1,13 +1,25 @@
 import { useState } from "react";
 
 const StatisticLine = (props) => {
-  return (
-    <>
-      <p>
-        {props.text} : {props.value}
-      </p>
-    </>
-  );
+  if (props.text === "Positive rating %") {
+    return (
+      <>
+        <tr>
+          <td style={{padding: "5px"}}>{props.text}</td>
+          <td style={{padding: "5px"}}>{props.value} %</td>
+        </tr>
+      </>
+    );
+  } else {
+    return (
+      <>
+        <tr>
+          <td style={{padding: "5px"}}>{props.text}</td>
+          <td style={{padding: "5px"}}>{props.value}</td>
+        </tr>
+      </>
+    );
+  }
 };
 
 const Statistics = ({ good, bad, neutral, total, average, positive }) => {
@@ -15,13 +27,16 @@ const Statistics = ({ good, bad, neutral, total, average, positive }) => {
   else {
     return (
       <div>
-        <StatisticLine text="good" value={good} />
-        <StatisticLine text="neutral" value={neutral} />
-        <StatisticLine text="bad" value={bad} />
-        <br />
-        <StatisticLine text="All" value={total} />
-        <StatisticLine text="Average" value={average} />
-        <StatisticLine text="Positive rating %" value={positive} />
+        <table>
+          <tbody>
+            <StatisticLine text="good" value={good} />
+            <StatisticLine text="neutral" value={neutral} />
+            <StatisticLine text="bad" value={bad} />
+            <StatisticLine text="All" value={total} />
+            <StatisticLine text="Average" value={average} />
+            <StatisticLine text="Positive rating %" value={positive} />
+          </tbody>
+        </table>
       </div>
     );
   }
