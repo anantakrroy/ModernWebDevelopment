@@ -88,8 +88,6 @@ const App = () => {
   const [quote, setQuote] = useState(anecdotes[selected]);
   const [votes, setVotes] = useState(Array(anecdotes.length).fill(0));
 
-  console.log(`votes >>> ${votes}`);
-
   const handleGood = () => {
     const updateGood = good + 1;
     const updateTotal = total + 1;
@@ -134,8 +132,23 @@ const App = () => {
     setVotes(copy);
   }
 
+  const highestQuote = () => {
+    if(votes.every(e => e === 0))
+      return "Vote to see highest voted quote !";
+    const idx = votes.indexOf(Math.max(...votes));
+    return anecdotes[idx];
+  }
+
   return (
     <div>
+      <h1>Anecdote of the day</h1>
+      <Quote text={quote} />
+      <Vote value={votes[selected]} />
+      <Button text="Vote" onClick={updateVote}/>
+      <Button text="Random Quote" onClick={generateQuote} />
+      <h1>Anecdote with highest votes</h1>
+      <Quote text={highestQuote()}/>
+      <hr />
       <h1>Feedback</h1>
       <Button onClick={handleGood} text="Good" />
       <Button onClick={handleNeutral} text="Neutral" />
@@ -149,11 +162,6 @@ const App = () => {
         average={average}
         positive={positive}
       />
-      <hr />
-      <Quote text={quote} />
-      <Vote value={votes[selected]} />
-      <Button text="Vote" onClick={updateVote}/>
-      <Button text="Random Quote" onClick={generateQuote} />
     </div>
   );
 };
