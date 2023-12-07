@@ -45,7 +45,7 @@ const Statistics = ({ good, bad, neutral, total, average, positive }) => {
 const Button = (props) => {
   return (
     <>
-      <button onClick={props.onClick}>{props.text}</button>
+      <button onClick={props.onClick} style={{margin: '0 3px' }}>{props.text}</button>
     </>
   );
 };
@@ -57,6 +57,14 @@ const Quote = (props) => {
     </>
   );
 };
+
+const Vote = (props) => {
+  return (
+    <>
+      <p>has {props.value} votes</p>
+    </>
+  )
+}
 
 const App = () => {
   const anecdotes = [
@@ -78,6 +86,9 @@ const App = () => {
   const [positive, setPositive] = useState(0);
   const [selected, setSelected] = useState(0);
   const [quote, setQuote] = useState(anecdotes[selected]);
+  const [votes, setVotes] = useState(Array(anecdotes.length).fill(0));
+
+  console.log(`votes >>> ${votes}`);
 
   const handleGood = () => {
     const updateGood = good + 1;
@@ -116,6 +127,13 @@ const App = () => {
     setQuote(anecdotes[random]);
   };
 
+  const updateVote = () => {
+    // never mutate state on original, make a copy
+    const copy = [...votes];
+    copy[selected] = votes[selected] + 1;
+    setVotes(copy);
+  }
+
   return (
     <div>
       <h1>Feedback</h1>
@@ -133,6 +151,8 @@ const App = () => {
       />
       <hr />
       <Quote text={quote} />
+      <Vote value={votes[selected]} />
+      <Button text="Vote" onClick={updateVote}/>
       <Button text="Random Quote" onClick={generateQuote} />
     </div>
   );
