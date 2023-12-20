@@ -1,5 +1,9 @@
 import { useState } from "react";
 
+import Person from "./components/Person";
+import Form from "./components/Form";
+import Search from "./components/Search";
+
 const App = () => {
   const [persons, setPersons] = useState([
     { name: "Arto Hellas", number: "040-123456", id: 1 },
@@ -19,12 +23,14 @@ const App = () => {
     event.preventDefault();
     const newPerson = {
       name: newName,
-      phone: newPhone,
+      number: newPhone,
+      id: persons.length + 1
     };
     if (isNamePresent(newName)) {
       alert(`${newName} is already added to the phonebook ! `);
     } else {
       setPersons([...persons, newPerson]);
+      setFilterPersons([...persons, newPerson]);
       setNewName("");
       setNewPhone("");
     }
@@ -42,35 +48,27 @@ const App = () => {
 
   const filterNames = (event) => {
     const filterBy = event.target.value.toLowerCase();
-    const filtered = persons.filter(person => person.name.toLowerCase().includes(filterBy));
+    const filtered = persons.filter((person) =>
+      person.name.toLowerCase().includes(filterBy)
+    );
     setFilterPersons(filtered);
-  }
+  };
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>Filter by name : <input onChange={filterNames}/></div>
-      <form>
-        <h3>Add a new entry</h3>
-        <div>
-          Name : <input value={newName} onChange={handleNameChange} />
-        </div>
-        <div>
-          Number : <input value={newPhone} onChange={handlePhoneChange} />
-        </div>
-        <div>
-          <button type="submit" onClick={addEntry}>
-            Add
-          </button>
-        </div>
-      </form>
+      <Search filterByName={filterNames} />
+      <Form
+        name={newName}
+        phone={newPhone}
+        onNameChange={handleNameChange}
+        onPhoneChange={handlePhoneChange}
+        addPerson={addEntry}
+      />
       <h2>Numbers</h2>
       <ul style={{ listStyle: "none" }}>
         {filterPersons.map((person) => (
-          <li key={person.name}>
-            <span style={{ padding: "15px" }}>{person.name} </span>
-            <span> {person.number} </span>
-          </li>
+          <Person key={person.name} person={person} />
         ))}
       </ul>
     </div>
