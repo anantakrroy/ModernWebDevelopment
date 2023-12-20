@@ -1,16 +1,24 @@
 import { useState } from "react";
 
 const App = () => {
-  const [persons, setPersons] = useState([{ name: "Arto Hellas" }]);
+  const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
+
+  const isNamePresent = (name) => {
+    return persons.find(e => e.name.toLowerCase() === name.toLowerCase());
+  }
 
   const addName = (event) => {
     event.preventDefault();
     const newPerson = {
       name: newName,
     };
-    setPersons([...persons, newPerson]);
-    setNewName("");
+    if(isNamePresent(newName)) {
+      alert(`${newName} is already added to the phonebook ! `);
+    } else {
+      setPersons([...persons, newPerson]);
+      setNewName("");
+    }
   };
 
   const handleNameChange = (event) => {
