@@ -13,7 +13,7 @@ const App = () => {
   ]);
   const [newName, setNewName] = useState("");
   const [newPhone, setNewPhone] = useState("");
-  const [filterPersons, setFilterPersons] = useState(persons);
+  const [nameFilter, setNameFilter] = useState("");
 
   const isNamePresent = (name) => {
     return persons.find((e) => e.name.toLowerCase() === name.toLowerCase());
@@ -24,13 +24,12 @@ const App = () => {
     const newPerson = {
       name: newName,
       number: newPhone,
-      id: persons.length + 1
+      id: persons.length + 1,
     };
     if (isNamePresent(newName)) {
       alert(`${newName} is already added to the phonebook ! `);
     } else {
       setPersons([...persons, newPerson]);
-      setFilterPersons([...persons, newPerson]);
       setNewName("");
       setNewPhone("");
     }
@@ -47,15 +46,12 @@ const App = () => {
   };
 
   const filterNames = (event) => {
-    const filterBy = event.target.value.toLowerCase();
-    const filtered = persons.filter((person) =>
-      person.name.toLowerCase().includes(filterBy)
-    );
-    setFilterPersons(filtered);
+    setNameFilter(event.target.value.toLowerCase());
   };
 
   return (
     <div>
+      
       <h2>Phonebook</h2>
       <Search filterByName={filterNames} />
       <Form
@@ -67,9 +63,12 @@ const App = () => {
       />
       <h2>Numbers</h2>
       <ul style={{ listStyle: "none" }}>
-        {filterPersons.map((person) => (
-          <Person key={person.name} person={person} />
-        ))}
+        {persons.map((person) => {
+          if (!person.name.toLowerCase().includes(nameFilter)) {
+            return null;
+          }
+          return <Person key={person.name} person={person} />;
+        })}
       </ul>
     </div>
   );
