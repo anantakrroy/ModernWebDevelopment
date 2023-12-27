@@ -1,19 +1,22 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 import Person from "./components/Person";
 import Form from "./components/Form";
 import Search from "./components/Search";
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: "Arto Hellas", number: "040-123456", id: 1 },
-    { name: "Ada Lovelace", number: "39-44-5323523", id: 2 },
-    { name: "Dan Abramov", number: "12-43-234345", id: 3 },
-    { name: "Mary Poppendieck", number: "39-23-6423122", id: 4 },
-  ]);
+  const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newPhone, setNewPhone] = useState("");
   const [nameFilter, setNameFilter] = useState("");
+
+  const hook = () => {
+    axios
+    .get("http://localhost:3001/persons")
+    .then(response => setPersons(response.data));
+  }
+  useEffect(hook, []);
 
   const isNamePresent = (name) => {
     return persons.find((e) => e.name.toLowerCase() === name.toLowerCase());
@@ -51,7 +54,6 @@ const App = () => {
 
   return (
     <div>
-      
       <h2>Phonebook</h2>
       <Search filterByName={filterNames} />
       <Form
