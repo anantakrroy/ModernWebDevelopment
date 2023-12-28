@@ -13,7 +13,7 @@ const App = (props) => {
       console.log("promise fulfilled");
       setNotes(response.data);
     });
-  }
+  };
 
   useEffect(hook, []);
   console.log("render", notes.length, "notes");
@@ -24,13 +24,19 @@ const App = (props) => {
 
   const addNote = (event) => {
     event.preventDefault();
+
     const noteObject = {
       content: newNote,
-      id: notes.length + 1,
       important: Math.random() < 0.5,
     };
-    setNotes([...notes, noteObject]);
-    setNewNote("a new note...");
+    // setNotes([...notes, noteObject]);
+    // setNewNote("a new note...");
+
+    axios.post("http://localhost:3001/notes", noteObject).then((response) => {
+      console.log(response);
+      setNotes(notes.concat(noteObject));
+      setNewNote("");
+    });
   };
 
   const handleInputChange = (event) => {
