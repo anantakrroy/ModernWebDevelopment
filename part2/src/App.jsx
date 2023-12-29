@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import phoneService from "./services/phonebook";
 
 import Person from "./components/Person";
 import Form from "./components/Form";
@@ -10,10 +11,9 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newPhone, setNewPhone] = useState("");
   const [nameFilter, setNameFilter] = useState("");
-  const baseUrl = "http://localhost:3001/persons";
 
   const hook = () => {
-    axios.get(baseUrl).then((response) => setPersons(response.data));
+    phoneService.getPersons().then(response => setPersons(response));
   };
   useEffect(hook, []);
 
@@ -30,8 +30,9 @@ const App = () => {
     if (isNamePresent(newName)) {
       alert(`${newName} is already added to the phonebook ! `);
     } else {
-      axios.post(baseUrl, newPerson).then((response) => {
-        setPersons([...persons, newPerson]);
+      phoneService.createPerson(newPerson).then(response => {
+        console.log(response);
+        setPersons([...persons, response]);
         setNewName("");
         setNewPhone("");
       });
