@@ -3,7 +3,7 @@
     {
       "id": 1,
       "content": "HTML is easy",
-      "important": true
+      "important": false
     },
     {
       "id": 2,
@@ -37,18 +37,33 @@
     },
     {
       "content": "a new note...",
-      "important": false,
+      "important": true,
       "id": 8
     },
     {
       "content": "a brand new note",
-      "important": false,
+      "important": true,
       "id": 9
     },
     {
       "content": "this is tenth note",
-      "important": true,
+      "important": false,
       "id": 10
+    },
+    {
+      "content": "create a new note now",
+      "important": false,
+      "id": 11
+    },
+    {
+      "content": "modularized notes",
+      "important": false,
+      "id": 12
+    },
+    {
+      "content": "a new note...",
+      "important": true,
+      "id": 13
     }
   ]
 }
