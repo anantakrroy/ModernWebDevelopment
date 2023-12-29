@@ -10,12 +10,11 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newPhone, setNewPhone] = useState("");
   const [nameFilter, setNameFilter] = useState("");
+  const baseUrl = "http://localhost:3001/persons";
 
   const hook = () => {
-    axios
-    .get("http://localhost:3001/persons")
-    .then(response => setPersons(response.data));
-  }
+    axios.get(baseUrl).then((response) => setPersons(response.data));
+  };
   useEffect(hook, []);
 
   const isNamePresent = (name) => {
@@ -27,14 +26,15 @@ const App = () => {
     const newPerson = {
       name: newName,
       number: newPhone,
-      id: persons.length + 1,
     };
     if (isNamePresent(newName)) {
       alert(`${newName} is already added to the phonebook ! `);
     } else {
-      setPersons([...persons, newPerson]);
-      setNewName("");
-      setNewPhone("");
+      axios.post(baseUrl, newPerson).then((response) => {
+        setPersons([...persons, newPerson]);
+        setNewName("");
+        setNewPhone("");
+      });
     }
   };
 
