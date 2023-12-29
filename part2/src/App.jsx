@@ -14,8 +14,10 @@ const App = () => {
 
   const hook = () => {
     phoneService.getPersons().then((response) => {
-      console.log(response);
+      // console.log(response);
       setPersons(response);
+    }).catch(error => {
+      alert(`Error fetching phonebook users : ${error.message} ! Retry later...`);
     });
   };
   useEffect(hook, []);
