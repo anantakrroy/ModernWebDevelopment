@@ -13,7 +13,10 @@ const App = () => {
   const [nameFilter, setNameFilter] = useState("");
 
   const hook = () => {
-    phoneService.getPersons().then(response => setPersons(response));
+    phoneService.getPersons().then((response) => {
+      console.log(response);
+      setPersons(response);
+    });
   };
   useEffect(hook, []);
 
@@ -30,12 +33,29 @@ const App = () => {
     if (isNamePresent(newName)) {
       alert(`${newName} is already added to the phonebook ! `);
     } else {
-      phoneService.createPerson(newPerson).then(response => {
+      phoneService.createPerson(newPerson).then((response) => {
         console.log(response);
         setPersons([...persons, response]);
         setNewName("");
         setNewPhone("");
       });
+    }
+  };
+
+  const deletePerson = (event) => {
+    const id = Number(event.target.id);
+    const person = persons.filter((person) => person.id === id);
+    const name = person[0].name;
+    if (window.confirm(`Delete ${name} ?`)) {
+      // console.log(`deleting ${name}......`);
+      phoneService
+        .deletePerson(id)
+        .then((response) => {
+          setPersons(persons.filter(person => person.id !== id))
+        })
+        .catch((error) => {
+          alert(`Person with id ${id} is already removed from database !`);
+        });
     }
   };
 
@@ -70,7 +90,13 @@ const App = () => {
           if (!person.name.toLowerCase().includes(nameFilter)) {
             return null;
           }
-          return <Person key={person.name} person={person} />;
+          return (
+            <Person
+              key={person.name}
+              person={person}
+              deletePerson={deletePerson}
+            />
+          );
         })}
       </ul>
     </div>
