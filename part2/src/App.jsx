@@ -13,12 +13,16 @@ const App = () => {
   const [nameFilter, setNameFilter] = useState("");
 
   const hook = () => {
-    phoneService.getPersons().then((response) => {
-      // console.log(response);
-      setPersons(response);
-    }).catch(error => {
-      alert(`Error fetching phonebook users : ${error.message} ! Retry later...`);
-    });
+    phoneService
+      .getPersons()
+      .then((response) => {
+        setPersons(response);
+      })
+      .catch((error) => {
+        alert(
+          `Error fetching phonebook users : ${error.message} ! Retry later...`
+        );
+      });
   };
   useEffect(hook, []);
 
@@ -33,10 +37,15 @@ const App = () => {
       number: newPhone,
     };
     if (isNamePresent(newName)) {
-      alert(`${newName} is already added to the phonebook ! `);
+      if (
+        window.confirm(
+          `${newName} is already added to the phonebook ! Replace old number with new number ? `
+        )
+      ) {
+        updatePerson(newPerson);
+      }
     } else {
       phoneService.createPerson(newPerson).then((response) => {
-        console.log(response);
         setPersons([...persons, response]);
         setNewName("");
         setNewPhone("");
@@ -44,16 +53,25 @@ const App = () => {
     }
   };
 
+  const updatePerson = (event) => {
+    const newPerson = event;
+    const personToUpdateId = persons.find(
+      (person) => person.name.toLowerCase() === newPerson.name.toLowerCase()
+    )["id"];
+    phoneService.updatePerson(newPerson, personToUpdateId).then((response) => {
+      setPersons(persons.map(p => p.id === personToUpdateId ? {name: p.name, number: newPerson.number} : p))
+    });
+  };
+
   const deletePerson = (event) => {
     const id = Number(event.target.id);
     const person = persons.filter((person) => person.id === id);
     const name = person[0].name;
     if (window.confirm(`Delete ${name} ?`)) {
-      // console.log(`deleting ${name}......`);
       phoneService
         .deletePerson(id)
         .then((response) => {
-          setPersons(persons.filter(person => person.id !== id))
+          setPersons(persons.filter((person) => person.id !== id));
         })
         .catch((error) => {
           alert(`Person with id ${id} is already removed from database !`);
