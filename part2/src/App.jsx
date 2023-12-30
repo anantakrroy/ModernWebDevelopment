@@ -60,6 +60,8 @@ const App = () => {
     )["id"];
     phoneService.updatePerson(newPerson, personToUpdateId).then((response) => {
       setPersons(persons.map(p => p.id === personToUpdateId ? {name: p.name, number: newPerson.number} : p))
+    })catch(error => {
+      alert(`Error updating phonebook entry : ${error.message} !`);
     });
   };
 
