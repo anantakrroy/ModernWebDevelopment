@@ -67,7 +67,6 @@ const App = () => {
 
   const deletePerson = (event) => {
     const id = Number(event.target.id);
-    console.log(id)
     const person = persons.filter((person) => person.id === id);
     const name = person[0].name;
     if (window.confirm(`Delete ${name} ?`)) {
