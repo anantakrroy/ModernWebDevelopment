@@ -5,12 +5,14 @@ import phoneService from "./services/phonebook";
 import Person from "./components/Person";
 import Form from "./components/Form";
 import Search from "./components/Search";
+import Notification from "./components/Notification";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newPhone, setNewPhone] = useState("");
   const [nameFilter, setNameFilter] = useState("");
+  const [notification, setNotification]= useState("");
 
   const hook = () => {
     phoneService
@@ -46,9 +48,14 @@ const App = () => {
       }
     } else {
       phoneService.createPerson(newPerson).then((response) => {
+        // console.log(response);
         setPersons([...persons, response]);
+        setNotification(`Added ${response.name}`);
         setNewName("");
         setNewPhone("");
+        setTimeout(() => {
+          setNotification(null);
+        }, 3000);
       });
     }
   };
@@ -59,7 +66,11 @@ const App = () => {
       (person) => person.name.toLowerCase() === newPerson.name.toLowerCase()
     )["id"];
     phoneService.updatePerson(newPerson, personToUpdateId).then((response) => {
-      setPersons(persons.map(p => p.id === personToUpdateId ? {name: p.name, number: newPerson.number} : p))
+      setPersons(persons.map(p => p.id === personToUpdateId ? {name: p.name, number: newPerson.number} : p));
+      setNotification(`Updated phone number of ${newPerson.name}`);
+      setTimeout(() => {
+        setNotification(null);
+      }, 3000);
     }).catch(error => {
       alert(`Error updating phonebook entry : ${error.message} !`);
     });
@@ -106,6 +117,7 @@ const App = () => {
         onPhoneChange={handlePhoneChange}
         addPerson={addEntry}
       />
+      <Notification message={notification} />
       <h2>Numbers</h2>
       <ul style={{ listStyle: "none" }}>
         {persons.map((person) => {
