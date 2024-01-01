@@ -12,7 +12,7 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newPhone, setNewPhone] = useState("");
   const [nameFilter, setNameFilter] = useState("");
-  const [notification, setNotification]= useState("");
+  const [notification, setNotification] = useState({});
 
   const hook = () => {
     phoneService
@@ -21,9 +21,13 @@ const App = () => {
         setPersons(response);
       })
       .catch((error) => {
-        alert(
-          `Error fetching phonebook users : ${error.message} ! Retry later...`
-        );
+        setNotification({
+          type: "deleteNotif",
+          message: `Error getting users : ${error.message}!`,
+        });
+        setTimeout(() => {
+          setNotification({});
+        }, 3000);
       });
   };
   useEffect(hook, []);
@@ -47,16 +51,29 @@ const App = () => {
         updatePerson(newPerson);
       }
     } else {
-      phoneService.createPerson(newPerson).then((response) => {
-        // console.log(response);
-        setPersons([...persons, response]);
-        setNotification(`Added ${response.name}`);
-        setNewName("");
-        setNewPhone("");
-        setTimeout(() => {
-          setNotification(null);
-        }, 3000);
-      });
+      phoneService
+        .createPerson(newPerson)
+        .then((response) => {
+          setPersons([...persons, response]);
+          setNotification({
+            type: "createNotif",
+            message: `Added ${response.name}`,
+          });
+          setNewName("");
+          setNewPhone("");
+          setTimeout(() => {
+            setNotification({});
+          }, 3000);
+        })
+        .catch((error) => {
+          setNotification({
+            type: "deleteNotif",
+            message: `Error adding ${newPerson.name} because ${error.message}!`,
+          });
+          setTimeout(() => {
+            setNotification({});
+          }, 3000);
+        });
     }
   };
 
@@ -65,15 +82,35 @@ const App = () => {
     const personToUpdateId = persons.find(
       (person) => person.name.toLowerCase() === newPerson.name.toLowerCase()
     )["id"];
-    phoneService.updatePerson(newPerson, personToUpdateId).then((response) => {
-      setPersons(persons.map(p => p.id === personToUpdateId ? {name: p.name, number: newPerson.number} : p));
-      setNotification(`Updated phone number of ${newPerson.name}`);
-      setTimeout(() => {
-        setNotification(null);
-      }, 3000);
-    }).catch(error => {
-      alert(`Error updating phonebook entry : ${error.message} !`);
-    });
+    phoneService
+      .updatePerson(newPerson, personToUpdateId)
+      .then((response) => {
+        setPersons(
+          persons.map((p) =>
+            p.id === personToUpdateId
+              ? { ...p, name: newPerson.name, number: newPerson.number }
+              : p
+          )
+        );
+        setNotification({
+          type: "updateNotif",
+          message: `Updated ${response.name} phone number`,
+        });
+        setNewName("");
+        setNewPhone("");
+        setTimeout(() => {
+          setNotification({});
+        }, 3000);
+      })
+      .catch((error) => {
+        setNotification({
+          type: "deleteNotif",
+          message: `Error updating ${newPerson.name} : ${error.message}!`,
+        });
+        setTimeout(() => {
+          setNotification({});
+        }, 3000);
+      });
   };
 
   const deletePerson = (event) => {
@@ -85,9 +122,22 @@ const App = () => {
         .deletePerson(id)
         .then((response) => {
           setPersons(persons.filter((person) => person.id !== id));
+          setNotification({
+            type: "deleteNotif",
+            message: `Successfully deleted ${name} !`,
+          });
+          setTimeout(() => {
+            setNotification({});
+          }, 3000);
         })
         .catch((error) => {
-          alert(`Person with id ${id} is already removed from database !`);
+          setNotification({
+            type: "deleteNotif",
+            message: `Error deleting ${name} because ${error.message} !`,
+          });
+          setTimeout(() => {
+            setNotification({});
+          }, 3000);
         });
     }
   };
@@ -117,7 +167,7 @@ const App = () => {
         onPhoneChange={handlePhoneChange}
         addPerson={addEntry}
       />
-      <Notification message={notification} />
+      <Notification notification={notification} />
       <h2>Numbers</h2>
       <ul style={{ listStyle: "none" }}>
         {persons.map((person) => {
