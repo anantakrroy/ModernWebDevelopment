@@ -1,12 +1,30 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Note from "./components/Note";
+import Notification from "./components/Notification";
 import noteService from "./services/notes";
+
+const Footer = () => {
+  const footerStyle = {
+    color: "green",
+    fontStyle: "italic",
+    fontSize: 16,
+  };
+  return (
+    <div style={footerStyle}>
+      <br />
+      <em>
+        Note app, Department of Computer Science, University of Helsinki 2023
+      </em>
+    </div>
+  );
+};
 
 const App = (props) => {
   const [notes, setNotes] = useState([]);
   const [newNote, setNewNote] = useState("a new note...");
   const [showAll, setShowAll] = useState(true);
+  const [errMessage, setErrMessage] = useState(null);
 
   const hook = () => {
     noteService.getAll().then((initialNotes) => {
@@ -45,17 +63,26 @@ const App = (props) => {
     // change the note important property ; below creates a shallow copy of the old note object.
     const changedNote = { ...note, important: !note.important };
     // make a PUT request to change the notes
-    noteService.update(id, changedNote).then((newNote) => {
-      setNotes(notes.map((note) => (note.id === id ? newNote : note)));
-    }).catch(error => {
-      alert(`the note ${note.content} was already deleted from the server !`);
-      setNotes(notes.filter(note => note.id !== id));
-    })
+    noteService
+      .update(id, changedNote)
+      .then((newNote) => {
+        setNotes(notes.map((note) => (note.id === id ? newNote : note)));
+      })
+      .catch((error) => {
+        setErrMessage(
+          `Note : ${note.content} was already deleted from the server !`
+        );
+        setTimeout(() => {
+          setErrMessage(null);
+        }, 5000);
+        setNotes(notes.filter((note) => note.id !== id));
+      });
   };
 
   return (
     <div>
       <h1>Notes</h1>
+      <Notification message={errMessage} />
       <button onClick={() => setShowAll(!showAll)}>
         Show {showAll ? "Important" : "All"}
       </button>
@@ -72,6 +99,7 @@ const App = (props) => {
         <input value={newNote} onChange={handleInputChange} />
         <button type="submit">Save</button>
       </form>
+      <Footer />
     </div>
   );
 };

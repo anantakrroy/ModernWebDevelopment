@@ -8,7 +8,7 @@
     {
       "id": 2,
       "content": "Browser can execute only JavaScript",
-      "important": false
+      "important": true
     },
     {
       "id": 3,
@@ -64,6 +64,16 @@
       "content": "a new note...",
       "important": true,
       "id": 13
+    },
+    {
+      "content": "a new note...",
+      "important": true,
+      "id": 14
+    },
+    {
+      "content": "note that is not saved to the server",
+      "important": true,
+      "id": 15
     }
   ]
 }
