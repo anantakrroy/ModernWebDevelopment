@@ -31,7 +31,15 @@ function App() {
 
   // console.log(`Result >>>> ${JSON.stringify(result)}`);
 
-  const Result = ({result}) => {
+  const showCountryInfo = (event) => {
+    // console.log(`show button clicked ..... ${event.target.id}`);
+    const countryId = event.target.id;
+    const country = result.filter((country) => country.id === countryId);
+    // console.log(`Show country >>>> ${JSON.stringify(country)}`);
+    setResult(country);
+  };
+
+  const Result = ({ result }) => {
     if (result.length > 10)
       return <p>{"Too many results....enter more characters in search...."}</p>;
     if (result.length === 1)
@@ -48,14 +56,24 @@ function App() {
               <li key={lang}>{lang}</li>
             ))}
           </ul>
-          <img alt={result[0].flag.alt} src={result[0].flag.svg} width={"200px"} height={"200px"}/>
+          <img
+            alt={result[0].flag.alt}
+            src={result[0].flag.svg}
+            width={"200px"}
+            height={"200px"}
+          />
         </div>
       );
     return (
       <>
         <ul>
           {result.map((country) => (
-            <li key={country.id}>{country.name}</li>
+            <li key={country.id}>
+              {country.name}
+              <button onClick={showCountryInfo} id={country.id}>
+                show
+              </button>
+            </li>
           ))}
         </ul>
       </>
