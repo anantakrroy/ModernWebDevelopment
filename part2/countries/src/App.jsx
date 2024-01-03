@@ -1,13 +1,20 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
+import Result from "./components/Result";
+
 function App() {
-  const apiUrl = "https://studies.cs.helsinki.fi/restcountries";
   const [country, setCountry] = useState(null);
   const [result, setResult] = useState([]);
   const [all, setAll] = useState([]);
+  const [temperature, setTemperature] = useState(0);
+  const [icon, setIcon] = useState("");
+  const [wind, setWind] = useState(0);
+  const [altText, setAltText] = useState("");
+  const apiKey = import.meta.env.VITE_OPW_API_KEY;
 
   useEffect(() => {
+    const apiUrl = "https://studies.cs.helsinki.fi/restcountries";
     axios.get(`${apiUrl}/api/all`).then((response) => setAll(response.data));
   }, []);
 
@@ -25,6 +32,8 @@ function App() {
         area: country.area,
         languages: country.languages,
         flag: country.flags,
+        lat: country.latlng[0],
+        long: country.latlng[1],
       }));
     setResult(searchResults);
   };
@@ -39,45 +48,20 @@ function App() {
     setResult(country);
   };
 
-  const Result = ({ result }) => {
-    if (result.length > 10)
-      return <p>{"Too many results....enter more characters in search...."}</p>;
-    if (result.length === 1)
-      return (
-        <div>
-          <h1>{result[0].name}</h1>
-          <p>Capital: {result[0].capital}</p>
-          <p>Area: {result[0].area}</p>
-          <p style={{ marginBottom: "5px" }}>
-            <strong>Languages: </strong>
-          </p>
-          <ul>
-            {Object.values(result[0].languages).map((lang) => (
-              <li key={lang}>{lang}</li>
-            ))}
-          </ul>
-          <img
-            alt={result[0].flag.alt}
-            src={result[0].flag.svg}
-            width={"200px"}
-            height={"200px"}
-          />
-        </div>
-      );
-    return (
-      <>
-        <ul>
-          {result.map((country) => (
-            <li key={country.id}>
-              {country.name}
-              <button onClick={showCountryInfo} id={country.id}>
-                show
-              </button>
-            </li>
-          ))}
-        </ul>
-      </>
-    );
+  const showWeatherInfo = (lat, long) => {
+    const apiUrl = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${long}&exclude=hourly,minutely&appid=${apiKey}`;
+
+    axios
+      .get(`${apiUrl}`)
+      .then((response) => {
+        // console.log(`weather api response : ${JSON.stringify(response.data)}`);
+        const data = response.data;
+        setTemperature(data.current.temp);
+        setIcon(data.current.weather[0].icon);
+        setWind(data.current.wind_speed);
+        setAltText(data.current.weather[0].description);
+      })
+      .catch((error) => console.log(`Error fetching weather : ${error}`));
   };
 
   return (
@@ -90,7 +74,15 @@ function App() {
         name="country"
         onChange={handleInputChange}
       />
-      <Result result={result} />
+      <Result
+        result={result}
+        showCountryInfo={showCountryInfo}
+        showWeatherInfo={showWeatherInfo}
+        temperature={temperature}
+        icon={icon}
+        wind={wind}
+        altText={altText}
+      />
     </div>
   );
 }
