@@ -4,7 +4,6 @@ const app = express();
 
 app.use(express.json());
 app.use(cors());
-app.use(express.static('dist'))
 
 let notes = [
   {
@@ -37,6 +36,14 @@ app.get("/api/notes/:id", (request, response) => {
   const note = notes.find((note) => note.id === id);
   if (note) response.json(note);
   else response.status(404).end();
+});
+
+app.put("/api/notes/:id", (request, response) => {
+  const id = Number(request.params.id);
+  const note = notes.find((note) => note.id === id);
+  const toggledImportance = request.body;
+  response.json(toggledImportance);
+  
 });
 
 app.delete("/api/notes/:id", (request, response) => {
