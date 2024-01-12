@@ -2,9 +2,8 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Note from "./components/Note";
 import Notification from "./components/Notification";
-import Footer from "./components/Footer"
+import Footer from "./components/Footer";
 import noteService from "./services/notes";
-
 
 const App = (props) => {
   const [notes, setNotes] = useState([]);
