@@ -54,10 +54,10 @@ const App = () => {
       phoneService
         .createPerson(newPerson)
         .then((response) => {
-          setPersons([...persons, response]);
+          setPersons(response);
           setNotification({
             type: "createNotif",
-            message: `Added ${response.name}`,
+            message: `Added ${newPerson.name}`,
           });
           setNewName("");
           setNewPhone("");
