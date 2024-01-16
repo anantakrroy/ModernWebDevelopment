@@ -71,7 +71,7 @@ const App = (props) => {
       <button onClick={() => setShowAll(!showAll)}>
         Show {showAll ? "Important" : "All"}
       </button>
-      <ul>
+      {notes ? <ul>
         {notesToShow.map((note) => (
           <Note
             key={note.id}
@@ -79,7 +79,7 @@ const App = (props) => {
             toggleImportance={() => toggleImportance(note.id)}
           />
         ))}
-      </ul>
+      </ul> : <p style={{fontColor: 'red'}}>{"No notes found to render !"}</p> }
       <form onSubmit={addNote}>
         <input value={newNote} onChange={handleInputChange} />
         <button type="submit">Save</button>
