@@ -1,4 +1,17 @@
-const http = require("http");
+require('dotenv').config();
+const mongoose = require("mongoose");
+const express = require("express");
+const morgan = require("morgan");
+const cors = require("cors");
+const Note = require("./models/note");
+
+
+const app = express();
+
+app.use(cors());
+// use for handling request bodies in requests
+app.use(express.json());
+app.use(morgan("tiny"));
 
 let notes = [
   {
@@ -18,11 +31,27 @@ let notes = [
   },
 ];
 
-const app = http.createServer((request, response) => {
-  response.writeHead(200, { "Content-Type": "application/json" });
-  response.end(JSON.stringify(notes));
+const password = process.argv[2];
+
+//  GET all notes
+app.get("/api/notes", (request, response) => {
+  Note.find({}).then((notes) => response.json(notes));
 });
 
-const port = 3001;
+//  POST a new note
+app.post("/api/notes", (request, response) => {
+  const body = request.body;
+
+  if(body.content === undefined){
+    return response.status(400).json({error: 'content missing !'})
+  }
+  const note = new Note({
+    content: body.content,
+    important: body.important || false
+  })
+  note.save().then(savedNote => response.json(savedNote));
+})
+
+const port = process.env.PORT;
 app.listen(port);
 console.log(`Server running on port ${port} !`);
