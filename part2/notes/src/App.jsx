@@ -43,7 +43,6 @@ const App = (props) => {
 
   const toggleImportance = (id) => {
     // console.log(`Toggle importance of note with id : ${id}`);
-    const url = `http://localhost:3001/notes/${id}`;
     const note = notes.find((note) => note.id === id);
     // change the note important property ; below creates a shallow copy of the old note object.
     const changedNote = { ...note, important: !note.important };
