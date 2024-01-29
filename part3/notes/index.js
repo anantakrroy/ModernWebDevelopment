@@ -21,7 +21,7 @@ app.use(morgan("tiny"));
 
 // Error handler
 const errorHandler = (error, request, response, next) => {
-  console.log(error.message);
+  console.log(`Executing error handler .... ${error}`);
   if (error.name === "CastError") {
     return response.status(400).send({ error: "malformatted id ! " });
   }
@@ -46,7 +46,7 @@ app.get("/api/notes/:id", (request, response, next) => {
 });
 
 //  POST a new note
-app.post("/api/notes", (request, response) => {
+app.post("/api/notes", (request, response, next) => {
   const body = request.body;
 
   if (body.content === undefined) {
@@ -56,7 +56,45 @@ app.post("/api/notes", (request, response) => {
     content: body.content,
     important: body.important || false,
   });
-  note.save().then((savedNote) => response.json(savedNote));
+  note
+    .save()
+    .then((savedNote) => response.json(savedNote))
+    .catch((error) => next(error));
+});
+
+// DELETE a note
+app.delete("/api/notes/:id", (request, response, next) => {
+  console.log("hit delete endpoint.....");
+  Note.findByIdAndDelete(request.params.id)
+    .then((result) => {
+      console.log(result);
+      if (result) {
+        response.status(204).end();
+      } else {
+        response
+          .status(404)
+          .send({ message: "Note not found, already deleted from DB !!" });
+      }
+    })
+    .catch((error) => next(error));
+});
+
+//  UPDATE note
+app.put("/api/notes/:id", (request, response, next) => {
+  const body = request.body;
+  const updatedNote = {
+    content: body.content,
+    important: body.important,
+  };
+
+  Note.findByIdAndUpdate(request.params.id, updatedNote, { new: true })
+    .then((updated) => {
+      console.log(`Updated note : ${updated}`);
+      updated
+        ? response.status(200).json(updated)
+        : response.status(404).json({ message: "Note with id note found !!" });
+    })
+    .catch((error) => next(error));
 });
 
 // error handling is the last loaded middleware
