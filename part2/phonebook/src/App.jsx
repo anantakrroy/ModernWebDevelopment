@@ -32,10 +32,26 @@ const App = () => {
   };
   useEffect(hook, []);
 
+  // Helper methods
   const isNamePresent = (name) => {
     return persons.find((e) => e.name.toLowerCase() === name.toLowerCase());
   };
 
+  const handleNameChange = (event) => {
+    const newName = event.target.value;
+    setNewName(newName);
+  };
+
+  const handlePhoneChange = (event) => {
+    const phoneNumber = event.target.value;
+    setNewPhone(phoneNumber);
+  };
+
+  const filterNames = (event) => {
+    setNameFilter(event.target.value.toLowerCase());
+  };
+
+  // Add a new contact
   const addEntry = (event) => {
     event.preventDefault();
     const newPerson = {
@@ -77,6 +93,7 @@ const App = () => {
     }
   };
 
+  //  Update an existing entry
   const updatePerson = (event) => {
     const newPerson = event;
     const personToUpdateId = persons.find(
@@ -113,8 +130,9 @@ const App = () => {
       });
   };
 
+  //  Delete an existing entry
   const deletePerson = (event) => {
-    const id = Number(event.target.id);
+    const id = event.target.id;
     const person = persons.filter((person) => person.id === id);
     const name = person[0].name;
     if (window.confirm(`Delete ${name} ?`)) {
@@ -140,20 +158,6 @@ const App = () => {
           }, 3000);
         });
     }
-  };
-
-  const handleNameChange = (event) => {
-    const newName = event.target.value;
-    setNewName(newName);
-  };
-
-  const handlePhoneChange = (event) => {
-    const phoneNumber = event.target.value;
-    setNewPhone(phoneNumber);
-  };
-
-  const filterNames = (event) => {
-    setNameFilter(event.target.value.toLowerCase());
   };
 
   return (
