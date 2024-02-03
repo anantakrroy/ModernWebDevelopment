@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import phoneService from "./services/phonebook";
 
 import Person from "./components/Person";
