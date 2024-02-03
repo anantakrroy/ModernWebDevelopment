@@ -111,7 +111,7 @@ const App = () => {
         );
         setNotification({
           type: "updateNotif",
-          message: `Updated ${response.name} phone number`,
+          message: response.message,
         });
         setNewName("");
         setNewPhone("");
