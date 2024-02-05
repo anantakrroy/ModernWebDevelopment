@@ -24,6 +24,8 @@ const errorHandler = (error, request, response, next) => {
   console.log(`Executing error handler .... ${error}`);
   if (error.name === "CastError") {
     return response.status(400).send({ error: "malformatted id ! " });
+  } else if (error.name === "ValidationError") {
+    return response.status(400).json({ error: error.message });
   }
   next(error);
 };
@@ -87,7 +89,11 @@ app.put("/api/notes/:id", (request, response, next) => {
     important: body.important,
   };
 
-  Note.findByIdAndUpdate(request.params.id, updatedNote, { new: true })
+  Note.findByIdAndUpdate(request.params.id, updatedNote, {
+    new: true,
+    runValidators: true,
+    context: "query",
+  })
     .then((updated) => {
       console.log(`Updated note : ${updated}`);
       updated
@@ -96,6 +102,15 @@ app.put("/api/notes/:id", (request, response, next) => {
     })
     .catch((error) => next(error));
 });
+
+// Middleware for unknown endpoints
+const unknownEndpoint = (request, response) => {
+  response.status(404).json({
+    message: `Missing route : ${request.path} from the server !`,
+  });
+};
+
+app.use(unknownEndpoint);
 
 // error handling is the last loaded middleware
 app.use(errorHandler);
