@@ -81,9 +81,10 @@ const App = () => {
           }, 3000);
         })
         .catch((error) => {
+          // {console.log(`Error caught >>>> ${JSON.stringify(error.response)}`)}
           setNotification({
             type: "deleteNotif",
-            message: `Error adding ${newPerson.name} because ${error.message}!`,
+            message: `Error adding ${newPerson.name} because ${error.response.data.error}!`,
           });
           setTimeout(() => {
             setNotification({});
@@ -121,7 +122,7 @@ const App = () => {
       .catch((error) => {
         setNotification({
           type: "deleteNotif",
-          message: `Error updating ${newPerson.name} : ${error.message}!`,
+          message: `Error updating ${newPerson.name} : ${error.response.data.error}!`,
         });
         setTimeout(() => {
           setNotification({});

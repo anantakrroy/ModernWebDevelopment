@@ -11,8 +11,8 @@ const getPersons = () => {
 
 const getSpecificPerson = (id) => {
   const request = axios.get(`${baseUrl}/${id}`);
-  return request.then(response => response.data);
-}
+  return request.then((response) => response.data);
+};
 
 const createPerson = (newPerson) => {
   const request = axios.post(baseUrl, newPerson);
@@ -29,4 +29,10 @@ const updatePerson = (person, id) => {
   return request.then((response) => response.data);
 };
 
-export default { getPersons, getSpecificPerson, createPerson, deletePerson, updatePerson };
+export default {
+  getPersons,
+  getSpecificPerson,
+  createPerson,
+  deletePerson,
+  updatePerson,
+};
