@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const mongoose = require("mongoose");
+require("dotenv").config();
 
 const blogSchema = new mongoose.Schema({
   title: String,
@@ -13,12 +14,12 @@ const blogSchema = new mongoose.Schema({
 const Blog = mongoose.model("Blog", blogSchema);
 
 const mongoUrl =
-  "mongodb+srv://anantacodes:3jQBsNNrWJk83M2O@firstcluster.kbjdkfq.mongodb.net/bloglist?retryWrites=true&w=majority";
+  `mongodb+srv://anantacodes:${process.env.PASSWORD}@firstcluster.kbjdkfq.mongodb.net/bloglist?retryWrites=true&w=majority`;
 mongoose
   .connect(mongoUrl)
   .then(() => console.log(`Connected to database.....`))
   .catch((error) => console.log(`Error connecting to DB >>> ${error}`));
-  
+
 app.use(cors());
 app.use(express.json());
 
