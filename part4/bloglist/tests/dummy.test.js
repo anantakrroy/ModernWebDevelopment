@@ -81,3 +81,39 @@ describe('get the favorite blog', () => {
         })
     })
 })
+
+describe('most blogs by author', () => {
+    test('return correct result for multiple blogs', () => {
+        const blogs = [
+            {
+                title: 'You might not need Jest',
+                author: 'Pawel Gryzbek',
+                url: 'https://pawelgrzybek.com/you-might-not-need-jest-the-node-js-native-test-runner-is-great/',
+                likes: 23,
+            },
+            {
+                title: 'NodeJS native test runner',
+                author: 'Alexander Godwin',
+                url: 'https://blog.logrocket.com/exploring-node-js-native-test-runner/',
+                likes: 10,
+            },
+            {
+                title: 'HTTP status codes : A guide',
+                author: 'Jon Penland',
+                url: 'https://kinsta.com/blog/http-status-codes/',
+                likes: 4,
+            },
+            {
+                title: 'Introduction to snapshot flags in NodeJS',
+                author: 'Alexander Godwin',
+                url: 'https://blog.logrocket.com/snapshot-flags-node-js-v18-8/',
+                likes: 15
+            }
+        ]
+        const result = listHelper.mostBlogs(blogs)
+        assert.deepStrictEqual(result, {
+            'author' : 'Alexander Godwin',
+            'blogs' : 2
+        })
+    })
+})
