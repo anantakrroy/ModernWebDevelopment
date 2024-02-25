@@ -9,7 +9,7 @@ const mongoose = require('mongoose')
 
 mongoose.set('strictQuery', false)
 
-logger.info(`Connecting to >>> ${config.MONGO_URI}`)
+logger.info('Connecting to DB ...')
 
 mongoose.connect(config.MONGO_URI)
   .then(() => {
