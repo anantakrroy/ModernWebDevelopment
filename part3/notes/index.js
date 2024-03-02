@@ -108,6 +108,7 @@ const unknownEndpoint = (request, response) => {
   })
 }
 
+// handle requests to unknown endpoints
 app.use(unknownEndpoint)
 
 // error handling is the last loaded middleware
