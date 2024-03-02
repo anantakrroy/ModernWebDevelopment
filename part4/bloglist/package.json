@@ -4,10 +4,10 @@
   "description": "blog list node app",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon index.js",
+    "dev": "cross-env NODE_ENV=dev nodemon index.js",
     "lint": "eslint .",
     "lint-fix": "eslint . --fix",
-    "test": "node --test"
+    "test": "cross-env NODE_ENV=test node --test"
   },
   "keywords": [
     "nodejs",
@@ -19,12 +19,15 @@
   "dependencies": {
     "dotenv": "^16.4.4",
     "express": "^4.18.2",
+    "express-async-errors": "^3.1.1",
     "lodash": "^4.17.21",
     "mongoose": "^8.1.2"
   },
   "devDependencies": {
     "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
     "eslint": "^8.56.0",
-    "nodemon": "^3.0.3"
+    "nodemon": "^3.0.3",
+    "supertest": "^6.3.4"
   }
 }
