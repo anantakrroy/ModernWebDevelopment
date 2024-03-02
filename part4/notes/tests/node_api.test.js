@@ -5,7 +5,6 @@ const supertest = require('supertest')
 const app = require('../app')
 const Note = require('../models/note')
 const { initialNotes, nonExistingId, notesInDb } = require('./test_helper')
-const note = require('../models/note')
 
 const api = supertest(app)
 
@@ -73,7 +72,7 @@ test('a note can be deleted', async() => {
 
   await api.delete(`/api/notes/${noteToDelete.id}`)
 
-  const newNotes = await notesInDb();
+  const newNotes = await notesInDb()
   const contents = newNotes.map(note => note.content)
   assert(!contents.includes(noteToDelete.content))
   assert.strictEqual(newNotes.length, allNotes.length - 1)
