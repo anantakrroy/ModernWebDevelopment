@@ -27,6 +27,22 @@ test('Each blog has id identifier and not _id', async() => {
     assert.strictEqual(response.body.every(blog => blog._id), false)
 })
 
+test.only('Creates a new blog successfully', async()=> {
+    const newBlog = {
+        'title':'Exploring the native NodeJS test runner','author':'Alexander Godwin','url':'https://blog.logrocket.com/exploring-node-js-native-test-runner/','likes':5
+    }
+
+    const response = await api.post('/api/blogs')
+        .send(newBlog)
+        .expect('Content-Type',/application\/json/)
+        .expect(201)
+    const getResponse =  await api.get('/api/blogs')
+    const blogsLength = getResponse.body.length
+    assert.strictEqual(blogsLength, 3)
+    const findSavedBlog = await Blog.findOne({title : 'Exploring the native NodeJS test runner'})
+    assert(findSavedBlog)
+})
+
 after(async() => {
     await mongoose.connection.close()
 })
