@@ -21,6 +21,12 @@ test('GET request to / returns all blogs', async () => {
     assert.strictEqual(response.body.length, 2)
 })
 
+test('Each blog has id identifier and not _id', async() => {
+    const response = await api.get('/api/blogs')
+    assert.strictEqual(response.body.every(blog => blog.id), true)
+    assert.strictEqual(response.body.every(blog => blog._id), false)
+})
+
 after(async() => {
     await mongoose.connection.close()
 })
