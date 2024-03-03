@@ -27,7 +27,7 @@ test('Each blog has id identifier and not _id', async() => {
     assert.strictEqual(response.body.every(blog => blog._id), false)
 })
 
-test.only('Creates a new blog successfully', async()=> {
+test('Creates a new blog successfully', async()=> {
     const newBlog = {
         'title':'Exploring the native NodeJS test runner','author':'Alexander Godwin','url':'https://blog.logrocket.com/exploring-node-js-native-test-runner/','likes':5
     }
@@ -41,6 +41,18 @@ test.only('Creates a new blog successfully', async()=> {
     assert.strictEqual(blogsLength, 3)
     const findSavedBlog = await Blog.findOne({title : 'Exploring the native NodeJS test runner'})
     assert(findSavedBlog)
+})
+
+test('Default likes set to 0', async() => {
+    const blogWithMissingLikes = {
+        'title':'Exploring the native NodeJS test runner','author':'Alexander Godwin',
+        'url':'https://blog.logrocket.com/exploring-node-js-native-test-runner/'
+    }
+    const response = await api.post('/api/blogs')
+        .send(blogWithMissingLikes)
+        .expect('Content-Type', /application\/json/)
+        .expect(201)
+    assert.strictEqual(response.body.likes,0)
 })
 
 after(async() => {
