@@ -18,8 +18,21 @@ const blogWithMissingLikes = {
     'url':'https://blog.logrocket.com/exploring-node-js-native-test-runner/'
 }
 
+const blogWithMissingTitle = {
+    'author':'Alexander Godwin',
+    'url':'https://blog.logrocket.com/exploring-node-js-native-test-runner/'
+}
+
+const blogWithMissingUrl = {
+    'title':'Exploring the native NodeJS test runner','author':'Alexander Godwin',
+}
+
+const blogWithMissingTitleAndUrl = {
+    'author':'Alexander Godwin',
+}
+
 const newBlog = {
     'title':'Exploring the native NodeJS test runner','author':'Alexander Godwin','url':'https://blog.logrocket.com/exploring-node-js-native-test-runner/','likes':5
 }
 
-module.exports = {testBlogsList, blogWithMissingLikes, newBlog}
+module.exports = {testBlogsList, blogWithMissingLikes, newBlog, blogWithMissingTitle, blogWithMissingUrl, blogWithMissingTitleAndUrl}

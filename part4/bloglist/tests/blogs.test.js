@@ -6,6 +6,7 @@ const Blog = require('./../models/Blog')
 const testUtils = require('./test_utils')
 
 const app = require('./../app')
+const { request } = require('node:http')
 
 const api = supertest(app)
 
@@ -46,6 +47,23 @@ test('Default likes set to 0', async() => {
         .expect('Content-Type', /application\/json/)
         .expect(201)
     assert.strictEqual(response.body.likes,0)
+})
+
+test.only('Missing title or url throws 400 status', async() => {
+    await api
+        .post('/api/blogs')
+        .send(testUtils.blogWithMissingTitle)
+        .expect(400)
+
+    await api
+        .post('/api/blogs')
+        .send(testUtils.blogWithMissingUrl)
+        .expect(400)
+
+    await api
+        .post('/api/blogs')
+        .send(testUtils.blogWithMissingTitleAndUrl)
+        .expect(400)
 })
 
 after(async() => {
