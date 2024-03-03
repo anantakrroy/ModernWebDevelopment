@@ -13,4 +13,13 @@ const testBlogsList = [
     },
 ]
 
-module.exports = {testBlogsList}
+const blogWithMissingLikes = {
+    'title':'Exploring the native NodeJS test runner','author':'Alexander Godwin',
+    'url':'https://blog.logrocket.com/exploring-node-js-native-test-runner/'
+}
+
+const newBlog = {
+    'title':'Exploring the native NodeJS test runner','author':'Alexander Godwin','url':'https://blog.logrocket.com/exploring-node-js-native-test-runner/','likes':5
+}
+
+module.exports = {testBlogsList, blogWithMissingLikes, newBlog}

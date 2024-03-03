@@ -28,12 +28,8 @@ test('Each blog has id identifier and not _id', async() => {
 })
 
 test('Creates a new blog successfully', async()=> {
-    const newBlog = {
-        'title':'Exploring the native NodeJS test runner','author':'Alexander Godwin','url':'https://blog.logrocket.com/exploring-node-js-native-test-runner/','likes':5
-    }
-
     const response = await api.post('/api/blogs')
-        .send(newBlog)
+        .send(testUtils.newBlog)
         .expect('Content-Type',/application\/json/)
         .expect(201)
     const getResponse =  await api.get('/api/blogs')
@@ -44,12 +40,9 @@ test('Creates a new blog successfully', async()=> {
 })
 
 test('Default likes set to 0', async() => {
-    const blogWithMissingLikes = {
-        'title':'Exploring the native NodeJS test runner','author':'Alexander Godwin',
-        'url':'https://blog.logrocket.com/exploring-node-js-native-test-runner/'
-    }
+    
     const response = await api.post('/api/blogs')
-        .send(blogWithMissingLikes)
+        .send(testUtils.blogWithMissingLikes)
         .expect('Content-Type', /application\/json/)
         .expect(201)
     assert.strictEqual(response.body.likes,0)
