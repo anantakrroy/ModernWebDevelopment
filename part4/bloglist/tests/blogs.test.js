@@ -49,7 +49,7 @@ test('Default likes set to 0', async() => {
     assert.strictEqual(response.body.likes,0)
 })
 
-test.only('Missing title or url throws 400 status', async() => {
+test('Missing title or url throws 400 status', async() => {
     await api
         .post('/api/blogs')
         .send(testUtils.blogWithMissingTitle)
