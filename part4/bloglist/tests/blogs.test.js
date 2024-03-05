@@ -77,7 +77,6 @@ describe('Blog list test suite', () => {
         test('Blog with specific id is deleted', async () => {
             const allBlogs = await Blog.find({})
             const blogId = allBlogs[0].id
-            console.log(`Id to delete >>>>> ${typeof(blogId)}`)
             await api
                 .delete(`/api/blogs/${blogId}`)
                 .expect(204)
