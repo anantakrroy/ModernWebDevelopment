@@ -1,3 +1,5 @@
+const Blog = require('../models/Blog')
+
 const testBlogsList = [
     {
         title: 'You might not need Jest',
@@ -12,6 +14,17 @@ const testBlogsList = [
         likes: 4,
     },
 ]
+
+const missingBlogId = async() => {
+    const newBlog = new Blog({
+        title: 'Deleted Blog',
+        author:'Invalid',
+        url: 'https://chd.in/djy'
+    })
+    await newBlog.save()
+    await newBlog.deleteOne()
+    return newBlog._id.toString()
+}
 
 const blogWithMissingLikes = {
     'title':'Exploring the native NodeJS test runner','author':'Alexander Godwin',
@@ -35,4 +48,4 @@ const newBlog = {
     'title':'Exploring the native NodeJS test runner','author':'Alexander Godwin','url':'https://blog.logrocket.com/exploring-node-js-native-test-runner/','likes':5
 }
 
-module.exports = {testBlogsList, blogWithMissingLikes, newBlog, blogWithMissingTitle, blogWithMissingUrl, blogWithMissingTitleAndUrl}
+module.exports = {missingBlogId, testBlogsList, blogWithMissingLikes, newBlog, blogWithMissingTitle, blogWithMissingUrl, blogWithMissingTitleAndUrl}

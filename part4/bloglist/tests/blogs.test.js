@@ -81,6 +81,13 @@ describe('Blog list test suite', () => {
                 .delete(`/api/blogs/${blogId}`)
                 .expect(204)
         })
+
+        test('Deletion with invalid id throws 404 status', async() => {
+            const nonExistentId = await testUtils.missingBlogId
+            await api
+                .delete(`/api/blogs/${nonExistentId}`)
+                .expect(404)
+        })
     })
 })
 
