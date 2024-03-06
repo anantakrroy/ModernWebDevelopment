@@ -89,6 +89,24 @@ describe('Blog list test suite', () => {
                 .expect(404)
         })
     })
+
+    describe('Updation of blogs', () => {
+        test('Updating existing blog is successful', async() => {
+            const allBlogs = await Blog.find({})
+            const idToUpdate = allBlogs[0].id
+            const response =  await api
+                .put(`/api/blogs/${idToUpdate}`)
+                .send(testUtils.updatedBlog)
+                .expect(200)
+            assert.deepStrictEqual(response.body, testUtils.updatedBlog)
+        })
+
+        test('Updating non existing blog returns 404 status', async() => {
+            await api.put('/api/blogs')
+                .send(testUtils.missingBlogId())
+                .expect(404)
+        })
+    })
 })
 
 after(async() => {

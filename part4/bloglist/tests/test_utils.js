@@ -48,4 +48,12 @@ const newBlog = {
     'title':'Exploring the native NodeJS test runner','author':'Alexander Godwin','url':'https://blog.logrocket.com/exploring-node-js-native-test-runner/','likes':5
 }
 
-module.exports = {missingBlogId, testBlogsList, blogWithMissingLikes, newBlog, blogWithMissingTitle, blogWithMissingUrl, blogWithMissingTitleAndUrl}
+const updatedBlog = {
+    title: 'You might not need Jest',
+    author: 'Paweł Grzybek',
+    url: 'https://pawelgrzybek.com/you-might-not-need-jest-the-node-js-native-test-runner-is-great/',
+    likes: 8
+}
+
+
+module.exports = {missingBlogId, testBlogsList, blogWithMissingLikes, newBlog, blogWithMissingTitle, blogWithMissingUrl, blogWithMissingTitleAndUrl, updatedBlog}
