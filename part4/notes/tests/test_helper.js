@@ -1,4 +1,5 @@
 const Note = require('../models/note')
+const User = require('../models/user')
 
 const initialNotes = [
   {
@@ -11,6 +12,10 @@ const initialNotes = [
   },
 ]
 
+const initialUsers = async () => {
+  const users = await User.find({})
+  return users
+}
 
 // function to create a  DB object ID that does not belong to any note in the database
 const nonExistingId = async() => {
@@ -25,4 +30,9 @@ const notesInDb = async () => {
   return notes.map(note => note.toJSON())
 }
 
-module.exports = { initialNotes, nonExistingId, notesInDb }
+const usersInDb = async() => {
+  const users = await User.find({})
+  return users.map(user => user.toJSON())
+}
+
+module.exports = { initialNotes, initialUsers, nonExistingId, notesInDb, usersInDb }
