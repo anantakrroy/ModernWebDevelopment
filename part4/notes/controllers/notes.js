@@ -3,7 +3,7 @@ const Note = require('../models/note')
 const User = require('../models/user')
 
 notesRouter.get('/', async (request, response) => {
-  const notes = await Note.find({})
+  const notes = await Note.find({}).populate('user', { username: 1, name: 1 })
   response.json(notes)
 })
 
@@ -19,6 +19,8 @@ notesRouter.get('/:id', async (request, response) => {
 
 notesRouter.post('/',async (request, response) => {
   const body = request.body
+  if(!body.userId)
+    response.status(400).json({ 'error' : 'Request body malformed !' })
   const user = await User.findById(body.userId)
 
   const note = new Note({

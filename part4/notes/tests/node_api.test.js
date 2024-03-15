@@ -6,7 +6,7 @@ const supertest = require('supertest')
 const app = require('../app')
 const Note = require('../models/note')
 const User = require('../models/user')
-const { initialNotes, initialUsers, nonExistingId, notesInDb, usersInDb } = require('./test_helper')
+const { initialNotes, firstUserId, dummyUser, nonExistingId, notesInDb, usersInDb } = require('./test_helper')
 
 const api = supertest(app)
 
@@ -14,6 +14,14 @@ describe('when there are some initial notes saved', () => {
   beforeEach(async() => {
     await Note.deleteMany({})
     await Note.insertMany(initialNotes)
+    await User.deleteMany({})
+    const passwordHash = await bcrypt.hash(dummyUser.password, 10)
+    const user = new User({
+      username:dummyUser.username,
+      name: dummyUser.name,
+      passwordHash: passwordHash
+    })
+    await user.save()
   })
 
   test('notes are returned as json', async () => {
@@ -66,9 +74,11 @@ describe('when there are some initial notes saved', () => {
 
   describe('Addition of a new note', () => {
     test('a valid note can be added', async() => {
+      const id = await firstUserId()
       const newNote = {
         content: 'async/await simplifies making async calls',
-        important: true
+        important: true,
+        userId: id
       }
 
       await api.post('/api/notes')
@@ -115,17 +125,26 @@ describe('when there are some initial notes saved', () => {
 describe('user api testing --- when there is one user initially in the DB', () => {
   beforeEach(async() => {
     await User.deleteMany({})
-    const passwordHash= await bcrypt.hash('sekret', 10)
-    const user = new User({ username : 'root' , name: 'Rooty Root' , passwordHash })
+    await Note.deleteMany({})
+    await Note.insertMany(initialNotes)
+    const passwordHash= await bcrypt.hash(dummyUser.password, 10)
+    const user = new User({
+      username : dummyUser.username,
+      name: dummyUser.name,
+      passwordHash: passwordHash,
+      notes: dummyUser.notes
+    })
     await user.save()
   })
 
   test('creation succeeds with fresh username', async () => {
-    const users = await initialUsers()
+    const users = await usersInDb()
+    const id = await firstUserId()
     const newUser = {
       'username' : 'marypop',
       'name' : 'Mary Poppins',
-      'password' : 'mary123'
+      'password' : 'mary123',
+      'notes' : [id]
     }
     await api
       .post('/api/users')
@@ -140,9 +159,9 @@ describe('user api testing --- when there is one user initially in the DB', () =
   })
 
   test('creation fails with proper status code and message if username already taken', async() => {
-    const usersAtStart = await initialUsers()
+    const usersAtStart = await usersInDb()
     const newUser = {
-      username : 'root',
+      username : 'rootyroot',
       password: 'sjfir',
       name: 'Sneaky Root'
     }
@@ -157,7 +176,7 @@ describe('user api testing --- when there is one user initially in the DB', () =
   })
 
   test('creation fails if the username validations fail', async() => {
-    const usersAtStart = await initialUsers()
+    const usersAtStart = await usersInDb()
     // username minlength not satisfied
     const newUser = {
       'username' : 'rt',

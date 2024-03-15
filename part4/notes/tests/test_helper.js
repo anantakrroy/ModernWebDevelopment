@@ -1,21 +1,36 @@
 const Note = require('../models/note')
 const User = require('../models/user')
+const mongoose = require('mongoose')
+
+const dummyUser = {
+  username: 'rootyroot',
+  name: 'Bohe Root',
+  password: 'root123',
+  notes: [new mongoose.Types.ObjectId()]
+}
+
+const usersInDb = async() => {
+  const users = await User.find({})
+  return users.map(user => user.toJSON())
+}
+
+const firstUserId = async() => {
+  const user = await usersInDb()
+  return user[0].id
+}
 
 const initialNotes = [
   {
     content: 'HTML is easy',
     important: false,
+    userId: firstUserId()
   },
   {
     content: 'Browser can execute only JavaScript',
     important: true,
+    userId: firstUserId()
   },
 ]
-
-const initialUsers = async () => {
-  const users = await User.find({})
-  return users
-}
 
 // function to create a  DB object ID that does not belong to any note in the database
 const nonExistingId = async() => {
@@ -30,9 +45,4 @@ const notesInDb = async () => {
   return notes.map(note => note.toJSON())
 }
 
-const usersInDb = async() => {
-  const users = await User.find({})
-  return users.map(user => user.toJSON())
-}
-
-module.exports = { initialNotes, initialUsers, nonExistingId, notesInDb, usersInDb }
+module.exports = { initialNotes, firstUserId, dummyUser, nonExistingId, notesInDb, usersInDb }
