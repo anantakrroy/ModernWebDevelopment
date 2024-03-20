@@ -28,6 +28,8 @@ notesRouter.get('/:id', async (request, response) => {
 
 notesRouter.post('/',async (request, response) => {
   const body = request.body
+  if(!body.userId)
+    response.status(400).json({ 'error' : 'Request body malformed !' })
   const decodedToken = jwt.verify(getToken(request), process.env.SECRET)
   if(!decodedToken.id) {
     return response.status(401).json({
@@ -35,8 +37,6 @@ notesRouter.post('/',async (request, response) => {
     })
   }
   const user = await User.findById(decodedToken.id)
-  if(!body.userId)
-    response.status(400).json({ 'error' : 'Request body malformed !' })
   const note = new Note({
     content: body.content,
     important: body.important || false,
