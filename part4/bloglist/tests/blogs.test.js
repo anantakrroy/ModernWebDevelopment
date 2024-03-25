@@ -103,7 +103,7 @@ describe('Blog list test suite', () => {
 
         test('Updating non existing blog returns 404 status', async() => {
             await api.put('/api/blogs')
-                .send(testUtils.missingBlogId())
+                .send(await git testUtils.missingBlogId())
                 .expect(404)
         })
     })

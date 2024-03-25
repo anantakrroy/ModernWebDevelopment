@@ -1,4 +1,5 @@
 const Blog = require('../models/Blog')
+const User = require('../models/User')
 
 const testBlogsList = [
     {
@@ -55,5 +56,11 @@ const updatedBlog = {
     likes: 8
 }
 
+const invalidUser = {
+    username: 'harrypotter',
+    name: 'Harry Potter',
+    password: 'po'
+}
 
-module.exports = {missingBlogId, testBlogsList, blogWithMissingLikes, newBlog, blogWithMissingTitle, blogWithMissingUrl, blogWithMissingTitleAndUrl, updatedBlog}
+
+module.exports = {missingBlogId, testBlogsList, blogWithMissingLikes, newBlog, blogWithMissingTitle, blogWithMissingUrl, blogWithMissingTitleAndUrl, updatedBlog, invalidUser}
