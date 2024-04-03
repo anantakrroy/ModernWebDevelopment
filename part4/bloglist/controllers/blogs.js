@@ -10,12 +10,12 @@ blogsRouter.get('/', async (request, response) => {
 blogsRouter.post('/', async (request, response) => {
     const body = request.body
     const users = await User.find({})
-    const user  = users[2]
+    const user  = users[0]
     const newBlog = new Blog({
         title: body.title,
         author: body.author,
         url: body.url,
-        user: user._id
+        user: user.id
     })
     const savedBlog = await newBlog.save()
     user.blogs = user.blogs.concat(savedBlog._id)
