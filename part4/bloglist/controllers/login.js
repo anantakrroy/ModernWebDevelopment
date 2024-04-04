@@ -16,7 +16,7 @@ loginRouter.post('/', async(request, response) => {
     if(isPasswordCorrect){
         const user = {
             username: isUser.username,
-            id: isUser._id
+            id: isUser._id,
         }
         const token = jwt.sign(user, process.env.SECRET)
         response.status(200).json({token, username: user.username, name: isUser.name})
