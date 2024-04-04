@@ -8,6 +8,17 @@ const requestLogger = (request, response, next) => {
     next()
 }
 
+const tokenExtractor = (request, response, next) => {
+    const authorization = request.headers.authorization
+    if(authorization && authorization.startsWith('Bearer ')) {
+        const token =  authorization.replace('Bearer ','')
+        request.token = token
+        next()
+    } else {
+        next()
+    }
+}
+
 const unknownEndpoint = (request, response) => {
     response.status(404).json({error : 'Not found ! '})
 }
@@ -27,4 +38,4 @@ const errorHandler = (error, request, response, next) => {
     next(error)
 }
 
-module.exports = {requestLogger, unknownEndpoint, errorHandler}
+module.exports = {requestLogger, tokenExtractor, unknownEndpoint, errorHandler}
