@@ -9,6 +9,12 @@ blogsRouter.get('/', async (request, response) => {
     response.json(blogs)
 })
 
+// get a specific blog
+// blogsRouter.get('/:id', async(request, response) => {
+//     const blog = await Blog.findById(request.params.id).populate('user', {username: 1, name: 1})
+//     response.status(200).json(blog)
+// })
+
 blogsRouter.post('/', async (request, response) => {
     const body = request.body
     const decoded = jwt.verify(request.token, process.env.SECRET)
@@ -31,9 +37,22 @@ blogsRouter.post('/', async (request, response) => {
     response.status(201).json(savedBlog)
 })
 
+// delete blog
 blogsRouter.delete('/:id', async(request, response) => {
-    await Blog.findByIdAndDelete(request.params.id)
-    response.status(204).end()
+    const token = request.token
+    const decoded = await jwt.verify(token, process.env.SECRET)
+    const blogToDelete = await Blog.findById(request.params.id)
+    
+    if(blogToDelete) {
+        if(String(blogToDelete.user) === decoded.id) {
+            await Blog.findByIdAndDelete(request.params.id)
+            response.status(204).end()
+        } else {
+            response.status(401).json({'error' : 'Unauthorised operation !'})
+        }
+    } else {
+        response.status(200).json({'error' : 'Blog already deleted or not found !'})
+    }
 })
 
 blogsRouter.put('/:id', async(request, response) => {
