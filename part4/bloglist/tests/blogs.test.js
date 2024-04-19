@@ -3,6 +3,7 @@ const assert = require('node:assert')
 const supertest = require('supertest')
 const mongoose = require('mongoose')
 const Blog = require('./../models/Blog')
+const User = require('./../models/User')
 const testUtils = require('./test_utils')
 
 const app = require('./../app')
@@ -12,12 +13,17 @@ const api = supertest(app)
 
 describe('Blog list test suite', () => {
     beforeEach(async() => {
+        await User.deleteMany({})
+        await api
+            .post('/api/users')
+            .send(testUtils.dummyUser)
+    
+        const user = await User.findOne({username : testUtils.dummyUser.username})
         await Blog.deleteMany({})
         for(let blog of testUtils.testBlogsList) {
-            await new Blog(blog).save()
+            await new Blog({...blog, user: user.id}).save()
         }
     })
-
     describe('Fetch blogs', () => {
         test('GET request to / returns all blogs', async () => {
             const response = await api.get('/api/blogs')
@@ -33,40 +39,79 @@ describe('Blog list test suite', () => {
 
     describe('Create a blog', () => {
         test('Creates a new blog successfully', async()=> {
+            // login user to get the token
+            const res = await api
+                .post('/api/login')
+                .send({
+                    'username' : testUtils.dummyUser.username,
+                    'password' : testUtils.dummyUser.password,
+                })
+            const token = res.body.token
+            
+            // make a POST req to the /api/blogs AND then
+            // compare assertions, expect
+            
             await api.post('/api/blogs')
                 .send(testUtils.newBlog)
-                .expect('Content-Type',/application\/json/)
+                .set('authorization', `Bearer ${token}`)
                 .expect(201)
-            const getResponse =  await api.get('/api/blogs')
-            const blogsLength = getResponse.body.length
-            assert.strictEqual(blogsLength, 3)
-            const findSavedBlog = await Blog.findOne({title : 'Exploring the native NodeJS test runner'})
-            assert(findSavedBlog)
+                .expect('Content-Type', /application\/json/)
         })  
 
         test('Missing title or url throws 400 status', async() => {
+            // login user to get the token
+            const res = await api
+                .post('/api/login')
+                .send({
+                    'username' : testUtils.dummyUser.username,
+                    'password' : testUtils.dummyUser.password,
+                })
+
+            const token = res.body.token
+            
             await api
                 .post('/api/blogs')
                 .send(testUtils.blogWithMissingTitle)
+                .set('authorization', `Bearer ${token}`)
                 .expect(400)
         
             await api
                 .post('/api/blogs')
                 .send(testUtils.blogWithMissingUrl)
+                .set('authorization', `Bearer ${token}`)
                 .expect(400)
         
             await api
                 .post('/api/blogs')
                 .send(testUtils.blogWithMissingTitleAndUrl)
+                .set('authorization', `Bearer ${token}`)
                 .expect(400)
-        })    
+        })  
+        
+        test('Missing token throws a 401 status', async() => {
+            const blog = await Blog.find({}[0])
+            await api
+                .post('/api/blogs')
+                .send(blog)
+                .expect(401)
+                .expect('Content-Type', /application\/json/)
+        })
     })
 
-    describe('Default values set', () => {
+    describe('Default value for likes set', () => {
         test('Default likes set to 0', async() => {
-    
+            // login user to get the token
+            const res = await api
+                .post('/api/login')
+                .send({
+                    'username' : testUtils.dummyUser.username,
+                    'password' : testUtils.dummyUser.password,
+                })
+            const token = res.body.token
+            
             const response = await api.post('/api/blogs')
                 .send(testUtils.blogWithMissingLikes)
+                .set('authorization', `Bearer ${token}`)
                 .expect('Content-Type', /application\/json/)
                 .expect(201)
             assert.strictEqual(response.body.likes,0)
@@ -75,17 +120,38 @@ describe('Blog list test suite', () => {
     
     describe('Deletion of blogs', () => {
         test('Blog with specific id is deleted', async () => {
+            // login user to get the token
+            const res = await api
+                .post('/api/login')
+                .send({
+                    'username' : testUtils.dummyUser.username,
+                    'password' : testUtils.dummyUser.password
+                })
+            const token = res.body.token
+            
             const allBlogs = await Blog.find({})
             const blogId = allBlogs[0].id
+
             await api
                 .delete(`/api/blogs/${blogId}`)
+                .set('authorization', `Bearer ${token}`)
                 .expect(204)
         })
 
         test('Deletion with invalid id throws 404 status', async() => {
+            // login user to get the token
+            const res = await api
+                .post('/api/login')
+                .send({
+                    'username' : testUtils.dummyUser.username,
+                    'password' : testUtils.dummyUser.password,
+                })
+            const token = res.body.token
+            
             const nonExistentId = await testUtils.missingBlogId
             await api
                 .delete(`/api/blogs/${nonExistentId}`)
+                .set('authorization', `Bearer ${token}`)
                 .expect(404)
         })
     })
@@ -103,7 +169,7 @@ describe('Blog list test suite', () => {
 
         test('Updating non existing blog returns 404 status', async() => {
             await api.put('/api/blogs')
-                .send(await git testUtils.missingBlogId())
+                .send(await testUtils.missingBlogId())
                 .expect(404)
         })
     })

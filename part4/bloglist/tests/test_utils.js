@@ -1,5 +1,10 @@
 const Blog = require('../models/Blog')
-const User = require('../models/User')
+
+const dummyUser = {
+    'username':'marypop', 
+    'name': 'Mary Poppins', 
+    'password' : 'mary123'
+}
 
 const testBlogsList = [
     {
@@ -15,6 +20,12 @@ const testBlogsList = [
         likes: 4,
     },
 ]
+
+const newBlog = {
+    'title':'Exploring the native NodeJS test runner',
+    'author':'Alexander Godwin','url':'https://blog.logrocket.com/exploring-node-js-native-test-runner/',
+    'likes':5,
+}
 
 const missingBlogId = async() => {
     const newBlog = new Blog({
@@ -45,10 +56,6 @@ const blogWithMissingTitleAndUrl = {
     'author':'Alexander Godwin',
 }
 
-const newBlog = {
-    'title':'Exploring the native NodeJS test runner','author':'Alexander Godwin','url':'https://blog.logrocket.com/exploring-node-js-native-test-runner/','likes':5
-}
-
 const updatedBlog = {
     title: 'You might not need Jest',
     author: 'Paweł Grzybek',
@@ -62,5 +69,4 @@ const invalidUser = {
     password: 'po'
 }
 
-
-module.exports = {missingBlogId, testBlogsList, blogWithMissingLikes, newBlog, blogWithMissingTitle, blogWithMissingUrl, blogWithMissingTitleAndUrl, updatedBlog, invalidUser}
+module.exports = {missingBlogId, testBlogsList, newBlog, blogWithMissingLikes, blogWithMissingTitle, blogWithMissingUrl, blogWithMissingTitleAndUrl, updatedBlog, invalidUser, dummyUser}

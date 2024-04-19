@@ -11,7 +11,7 @@ loginRouter.post('/', async(request, response) => {
         response.status(401).json({message : 'No user found !'})
     }
 
-    const isPasswordCorrect = await bcrypt.compare(password, isUser.passwordHash)  
+    const isPasswordCorrect = bcrypt.compare(password, isUser.passwordHash)  
     
     if(isPasswordCorrect){
         const user = {
