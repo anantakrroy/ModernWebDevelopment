@@ -4,7 +4,7 @@ const Note = require('../models/note')
 const User = require('../models/user')
 
 const getToken = request => {
-  const authorization = request.get('authorization')
+  const authorization = request.get('Authorization')
   if(authorization && authorization.startsWith('Bearer ')) {
     return authorization.replace('Bearer ', '')
   }
@@ -28,8 +28,6 @@ notesRouter.get('/:id', async (request, response) => {
 
 notesRouter.post('/',async (request, response) => {
   const body = request.body
-  if(!body.userId)
-    response.status(400).json({ 'error' : 'Request body malformed !' })
   const decodedToken = jwt.verify(getToken(request), process.env.SECRET)
   if(!decodedToken.id) {
     return response.status(401).json({
@@ -45,7 +43,7 @@ notesRouter.post('/',async (request, response) => {
   const savedNote = await note.save()
   user.notes =  user.notes.concat(savedNote._id)
   await user.save()
-  response.status(201).json(savedNote)
+  response.status(201).send(savedNote)
 })
 
 notesRouter.delete('/:id', async (request, response) => {
