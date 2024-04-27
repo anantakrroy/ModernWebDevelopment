@@ -23,6 +23,15 @@ const App = (props) => {
 
   useEffect(hook, []);
 
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedNoteAppUser')
+    if(loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+      noteService.setToken(user.token)
+    }
+  },[])
+
   const notesToShow = showAll
     ? notes
     : notes.filter((note) => note.important === true);
@@ -79,6 +88,7 @@ const App = (props) => {
         password,
       });
       console.log(`User >>> ${JSON.stringify(user)}`);
+      window.localStorage.setItem('loggedNoteAppUser', JSON.stringify(user))
       noteService.setToken(user.token)
       setUser(user);
       setUsername("");
