@@ -1,3 +1,7 @@
+# Bloglist frontend
+
+This app builds the frontend for the app whose backend was developed in Part 4 . 
+
 # React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.

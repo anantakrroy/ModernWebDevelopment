@@ -5,26 +5,45 @@ import loginService from "./services/login";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
+  const [token, setToken] = useState("");
 
+  //  Fetch all the notes when app loads
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
   }, []);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault()
-    console.log("form values >> ", username, password);
+  // check if local storage contains valid user
+  useEffect(() => {
+    const userInStorage = window.localStorage.getItem("loggedInUser");
+    if (userInStorage) {
+      const user = JSON.parse(userInStorage);
+      setUser(user);
+      setToken(user.data.token);
+    }
+  }, []);
+
+  const handleLogin = async (event) => {
+    event.preventDefault();
     try {
-      const user = await loginService.login({username, password})
-      console.log(`Token returned ???? ${JSON.stringify(user)}`);
-      setUser(user)
-      setUsername('')
-      setPassword('')
+      const user = await loginService.login({ username, password });
+      setUser(user);
+      window.localStorage.setItem("loggedInUser", JSON.stringify(user));
+      // set token in local storage
+      setToken(user.data.token);
+      setUsername("");
+      setPassword("");
     } catch (error) {
       console.log("error logging in .... ", error);
     }
+  };
+
+  const handleLogout = async (event) => {
+    event.preventDefault();
+    window.localStorage.removeItem('loggedInUser')
+    setUser('')
   }
 
   return (
@@ -32,14 +51,26 @@ const App = () => {
       {!user ? (
         <div>
           <h2>Log in to App</h2>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleLogin}>
             <div>
               <label htmlFor="username">Username: </label>
-              <input type="text" name="Username" id="username" value={username} onChange={({target}) => setUsername(target.value)}/>
+              <input
+                type="text"
+                name="Username"
+                id="username"
+                value={username}
+                onChange={({ target }) => setUsername(target.value)}
+              />
             </div>
             <div>
               <label htmlFor="password">Password : </label>
-              <input type="password" id="password" name="Password" value={password} onChange={({target}) => setPassword(target.value)} />
+              <input
+                type="password"
+                id="password"
+                name="Password"
+                value={password}
+                onChange={({ target }) => setPassword(target.value)}
+              />
             </div>
             <button type="submit">Login</button>
           </form>
@@ -47,7 +78,10 @@ const App = () => {
       ) : (
         <>
           <h2>Blogs</h2>
-          <h4>User : {user.data.name} is logged in....</h4>
+          <div>
+            <h4>User : {user.data.name} is logged in....</h4>
+            <button type="submit" onClick={handleLogout}>Logout</button>
+          </div>
           <ul>
             {blogs.map((blog) => (
               <li key={blog.id}>
