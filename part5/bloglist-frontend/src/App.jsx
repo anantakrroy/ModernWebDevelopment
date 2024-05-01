@@ -9,6 +9,9 @@ const App = () => {
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
   const [token, setToken] = useState("");
+  const [title, setTitle] = useState("");
+  const [author, setAuthor] = useState("");
+  const [url, setUrl] = useState("");
 
   //  Fetch all the notes when app loads
   useEffect(() => {
@@ -42,9 +45,23 @@ const App = () => {
 
   const handleLogout = async (event) => {
     event.preventDefault();
-    window.localStorage.removeItem('loggedInUser')
-    setUser('')
-  }
+    window.localStorage.removeItem("loggedInUser");
+    setUser("");
+  };
+
+  const handleCreateNote = async (event) => {
+    event.preventDefault();
+    try {
+      const newBlog = { title, author, url };
+      const response = await blogService.create(newBlog, token);
+      setBlogs([response, ...blogs])
+      setTitle("");
+      setAuthor("");
+      setUrl("");
+    } catch (error) {
+      console.log("Error creating a new note ....", error);
+    }
+  };
 
   return (
     <div>
@@ -80,7 +97,40 @@ const App = () => {
           <h2>Blogs</h2>
           <div>
             <h4>User : {user.data.name} is logged in....</h4>
-            <button type="submit" onClick={handleLogout}>Logout</button>
+            <button type="submit" onClick={handleLogout}>
+              Logout
+            </button>
+          </div>
+          <div>
+            <h2>Create New Note</h2>
+            <form onSubmit={handleCreateNote}>
+              <label htmlFor="title">Title : </label>
+              <input
+                type="text"
+                name="Title"
+                id="title"
+                value={title}
+                onChange={({ target }) => setTitle(target.value)}
+              />
+              <label htmlFor="author">Author : </label>
+              <input
+                type="text"
+                name="Author"
+                id="author"
+                value={author}
+                onChange={({ target }) => setAuthor(target.value)}
+              />
+              <label htmlFor=""></label>
+              <label htmlFor="url">Url : </label>
+              <input
+                type="url"
+                name="Url"
+                id="url"
+                value={url}
+                onChange={({ target }) => setUrl(target.value)}
+              />
+              <button type="submit">Create</button>
+            </form>
           </div>
           <ul>
             {blogs.map((blog) => (
