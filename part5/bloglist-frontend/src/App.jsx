@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import Blog from "./components/Blog";
+import Notification from "./components/Notification";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 
@@ -12,10 +13,11 @@ const App = () => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
+  const [alert,setAlert] = useState({});
 
   //  Fetch all the notes when app loads
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs));
+    blogService.getAll().then((blogs) => setBlogs(blogs.reverse()));
   }, []);
 
   // check if local storage contains valid user
@@ -38,15 +40,45 @@ const App = () => {
       setToken(user.data.token);
       setUsername("");
       setPassword("");
+      setAlert({
+        "message" : `${user.data.name} logged in successfully...`,
+        "type" : "success"
+      });
+      setTimeout(() => {
+        setAlert({})
+      }, 5000);
     } catch (error) {
-      console.log("error logging in .... ", error);
+      setAlert({
+        "message" : `failed to log in ... ${error.response.data.error}`,
+        "type" : "error"
+      })
+      setTimeout(() => {
+        setAlert({})
+      }, 5000)
     }
   };
 
   const handleLogout = async (event) => {
     event.preventDefault();
-    window.localStorage.removeItem("loggedInUser");
-    setUser("");
+    try {
+      window.localStorage.removeItem("loggedInUser");
+      setAlert({
+        "message" : `${user.data.name} logged out...`,
+        "type":"success"
+      });
+      setUser("");
+      setTimeout(() => {
+        setAlert({});
+      }, 5000);
+    } catch (error) {
+      setAlert({
+        "message" : error.message,
+        "type" : "error"
+      });
+      setTimeout(() => {
+        setAlert({})
+      },5000)
+    }
   };
 
   const handleCreateNote = async (event) => {
@@ -55,16 +87,30 @@ const App = () => {
       const newBlog = { title, author, url };
       const response = await blogService.create(newBlog, token);
       setBlogs([response, ...blogs])
+      setAlert({
+        "message" : `Created new blog : ${newBlog.title} by ${newBlog.author}`,
+        "type" : "success"
+      })
       setTitle("");
       setAuthor("");
       setUrl("");
+      setTimeout(() => {
+        setAlert({})
+      }, 5000)
     } catch (error) {
-      console.log("Error creating a new note ....", error);
+      setAlert({
+        "message" : error.response.data.error,
+        "type" : "error"
+      })
+      setTimeout(() => {
+        setAlert({})
+      }, 5000)
     }
   };
 
   return (
     <div>
+      {alert.message ? <Notification type={alert.type} message={alert.message}/> : <></>}
       {!user ? (
         <div>
           <h2>Log in to App</h2>

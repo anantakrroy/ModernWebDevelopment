@@ -1,6 +1,6 @@
 const Blog = ({ blog }) => (
   <div>
-    {blog.title} by {blog.author}
+    <a href={blog.url} target="_blank">{blog.title} by {blog.author}</a>
   </div>  
 )
 
