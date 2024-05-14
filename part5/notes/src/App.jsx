@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Note from "./components/Note";
 import Notification from "./components/Notification";
+import LoginForm from "./components/Login";
 import Footer from "./components/Footer";
 import noteService from "./services/notes";
 import loginService from "./services/login";
@@ -101,31 +102,6 @@ const App = (props) => {
     }
   };
 
-  // Login form
-  const loginForm = () => (
-    <form onSubmit={handleLogin}>
-      <div>
-        username :{" "}
-        <input
-          type="text"
-          value={username}
-          name="Username"
-          onChange={({ target }) => setUsername(target.value)}
-        />
-      </div>
-      <div>
-        password :{" "}
-        <input
-          type="password"
-          value={password}
-          name="Password"
-          onChange={({ target }) => setPassword(target.value)}
-        />
-      </div>
-      <button type="submit">Login</button>
-    </form>
-  );
-
   // Note form
   const noteForm = () => (
 
@@ -141,7 +117,14 @@ const App = (props) => {
       <Notification message={errMessage} />
       {/* render login form if no user logged in */}
       {/* render note form if user is logged in */}
-      {user === null ? loginForm() 
+      {user === null ? 
+      <LoginForm 
+        username={username}
+        password={password}
+        handleUsernameChange={({target}) => {setUsername(target.value)}}
+        handlePasswordChange={({target}) => {setPassword(target.value)}}
+        handleLogin={handleLogin}
+      />
       : <div>
           <p>User : <em>{user.name}</em> logged in ...</p>
           {noteForm()}
