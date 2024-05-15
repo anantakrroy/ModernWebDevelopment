@@ -15,6 +15,8 @@ const App = (props) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
+  // state to show login form
+  const [loginVisible, setLoginVisible] = useState(false);
 
   const hook = () => {
     noteService.getAll().then((initialNotes) => {
@@ -25,13 +27,13 @@ const App = (props) => {
   useEffect(hook, []);
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedNoteAppUser')
-    if(loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-      noteService.setToken(user.token)
+    const loggedUserJSON = window.localStorage.getItem("loggedNoteAppUser");
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON);
+      setUser(user);
+      noteService.setToken(user.token);
     }
-  },[])
+  }, []);
 
   const notesToShow = showAll
     ? notes
@@ -44,7 +46,7 @@ const App = (props) => {
       content: newNote,
       important: Math.random() < 0.5,
     };
-    
+
     noteService.create(noteObject).then((newNote) => {
       console.log(`response from backend ${JSON.stringify(newNote)}`);
       setNotes(notes.concat(newNote));
@@ -89,8 +91,8 @@ const App = (props) => {
         password,
       });
       console.log(`User >>> ${JSON.stringify(user)}`);
-      window.localStorage.setItem('loggedNoteAppUser', JSON.stringify(user))
-      noteService.setToken(user.token)
+      window.localStorage.setItem("loggedNoteAppUser", JSON.stringify(user));
+      noteService.setToken(user.token);
       setUser(user);
       setUsername("");
       setPassword("");
@@ -104,12 +106,38 @@ const App = (props) => {
 
   // Note form
   const noteForm = () => (
-
     <form onSubmit={addNote}>
       <input value={newNote} onChange={handleInputChange} />
       <button type="submit">Save</button>
     </form>
   );
+
+  // Login form
+  const loginForm = () => {
+    const hideWhenVisible = { display: loginVisible ? "none" : "" };
+    const showWhenVisible = { display: loginVisible ? "" : "none" };
+
+    return (
+      <div>
+        <div style={hideWhenVisible}>
+          <button onClick={() => setLoginVisible(true)}>Log In</button>
+        </div>
+        <div style={showWhenVisible}>
+          <LoginForm
+            username={username}
+            password={password}
+            handleUsernameChange={({ target }) => {
+              setUsername(target.value);
+            }}
+            handlePasswordChange={({ target }) => {
+              setPassword(target.value);
+            }}
+            handleLogin={handleLogin}
+          />
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div>
@@ -117,18 +145,16 @@ const App = (props) => {
       <Notification message={errMessage} />
       {/* render login form if no user logged in */}
       {/* render note form if user is logged in */}
-      {user === null ? 
-      <LoginForm 
-        username={username}
-        password={password}
-        handleUsernameChange={({target}) => {setUsername(target.value)}}
-        handlePasswordChange={({target}) => {setPassword(target.value)}}
-        handleLogin={handleLogin}
-      />
-      : <div>
-          <p>User : <em>{user.name}</em> logged in ...</p>
+      {user === null ? (
+        <>{loginForm()}</>
+      ) : (
+        <div>
+          <p>
+            User : <em>{user.name}</em> logged in ...
+          </p>
           {noteForm()}
-        </div>}
+        </div>
+      )}
       <button onClick={() => setShowAll(!showAll)}>
         Show {showAll ? "Important" : "All"}
       </button>
