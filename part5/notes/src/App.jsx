@@ -2,7 +2,9 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Note from "./components/Note";
 import Notification from "./components/Notification";
+import Togglable from "./components/Togglable";
 import LoginForm from "./components/Login";
+import NoteForm from "./components/NoteForm";
 import Footer from "./components/Footer";
 import noteService from "./services/notes";
 import loginService from "./services/login";
@@ -152,7 +154,9 @@ const App = (props) => {
           <p>
             User : <em>{user.name}</em> logged in ...
           </p>
-          {noteForm()}
+          <Togglable buttonLabel="new note">
+            <NoteForm onSubmit={addNote} value={newNote} handleInputChange={handleInputChange}/>
+          </Togglable>
         </div>
       )}
       <button onClick={() => setShowAll(!showAll)}>
