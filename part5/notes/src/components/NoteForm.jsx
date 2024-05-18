@@ -1,8 +1,21 @@
-const NoteForm = ({ onSubmit, handleInputChange, value }) => {
+import { useState } from "react";
+
+const NoteForm = ({ createNote }) => {
+  const [newNote, setNewNote] = useState('')
+
+  const addNote = (event) => {
+    event.preventDefault();
+    createNote({
+      content: newNote,
+      important: true
+    })
+    setNewNote('')
+  }
+
   return (
     <div>
-      <form onSubmit={onSubmit}>
-        <input value={value} onChange={handleInputChange} />
+      <form onSubmit={addNote}>
+        <input value={newNote} onChange={event => setNewNote(event.target.value)} />
         <button type="submit">Save</button>
       </form>
     </div>

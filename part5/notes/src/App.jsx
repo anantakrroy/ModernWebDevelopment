@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import Note from "./components/Note";
 import Notification from "./components/Notification";
 import Togglable from "./components/Togglable";
-import LoginForm from "./components/Login";
+import LoginForm from "./components/LoginForm";
 import NoteForm from "./components/NoteForm";
 import Footer from "./components/Footer";
 import noteService from "./services/notes";
@@ -41,14 +40,8 @@ const App = (props) => {
     ? notes
     : notes.filter((note) => note.important === true);
 
-  const addNote = (event) => {
-    event.preventDefault();
-
-    const noteObject = {
-      content: newNote,
-      important: Math.random() < 0.5,
-    };
-
+  const addNote = (noteObject) => {
+    console.log(`Note object >>> ${JSON.stringify(noteObject)}`);
     noteService.create(noteObject).then((newNote) => {
       console.log(`response from backend ${JSON.stringify(newNote)}`);
       setNotes(notes.concat(newNote));
@@ -106,41 +99,6 @@ const App = (props) => {
     }
   };
 
-  // Note form
-  const noteForm = () => (
-    <form onSubmit={addNote}>
-      <input value={newNote} onChange={handleInputChange} />
-      <button type="submit">Save</button>
-    </form>
-  );
-
-  // Login form
-  const loginForm = () => {
-    const hideWhenVisible = { display: loginVisible ? "none" : "" };
-    const showWhenVisible = { display: loginVisible ? "" : "none" };
-
-    return (
-      <div>
-        <div style={hideWhenVisible}>
-          <button onClick={() => setLoginVisible(true)}>Log In</button>
-        </div>
-        <div style={showWhenVisible}>
-          <LoginForm
-            username={username}
-            password={password}
-            handleUsernameChange={({ target }) => {
-              setUsername(target.value);
-            }}
-            handlePasswordChange={({ target }) => {
-              setPassword(target.value);
-            }}
-            handleLogin={handleLogin}
-          />
-        </div>
-      </div>
-    );
-  };
-
   return (
     <div>
       <h1>Notes</h1>
@@ -148,14 +106,16 @@ const App = (props) => {
       {/* render login form if no user logged in */}
       {/* render note form if user is logged in */}
       {user === null ? (
-        <>{loginForm()}</>
+        <Togglable buttonLabel="Login">
+            <LoginForm username={username} password={password} handleLogin={handleLogin} handleUsernameChange={({target}) => setUsername(target.value)} handlePasswordChange={({target}) => setPassword(target.value)}/>
+        </Togglable>
       ) : (
         <div>
           <p>
             User : <em>{user.name}</em> logged in ...
           </p>
           <Togglable buttonLabel="new note">
-            <NoteForm onSubmit={addNote} value={newNote} handleInputChange={handleInputChange}/>
+            <NoteForm createNote={addNote}/>
           </Togglable>
         </div>
       )}
