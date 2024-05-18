@@ -16,8 +16,6 @@ const App = (props) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
-  // state to show login form
-  const [loginVisible, setLoginVisible] = useState(false);
 
   const hook = () => {
     noteService.getAll().then((initialNotes) => {
@@ -41,9 +39,7 @@ const App = (props) => {
     : notes.filter((note) => note.important === true);
 
   const addNote = (noteObject) => {
-    console.log(`Note object >>> ${JSON.stringify(noteObject)}`);
     noteService.create(noteObject).then((newNote) => {
-      console.log(`response from backend ${JSON.stringify(newNote)}`);
       setNotes(notes.concat(newNote));
       setNewNote("");
     });
