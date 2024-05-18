@@ -44,11 +44,6 @@ const App = (props) => {
       setNewNote("");
     });
   };
-
-  const handleInputChange = (event) => {
-    setNewNote(event.target.value);
-  };
-
   const toggleImportance = (id) => {
     // console.log(`Toggle importance of note with id : ${id}`);
     const note = notes.find((note) => note.id === id);
