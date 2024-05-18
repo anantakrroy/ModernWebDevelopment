@@ -12,7 +12,7 @@ const App = (props) => {
   const [notes, setNotes] = useState([]);
   const [newNote, setNewNote] = useState("a new note...");
   const [showAll, setShowAll] = useState(true);
-  const [errMessage, setErrMessage] = useState(null);
+  const [notification, setNotification] = useState(null);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
@@ -44,6 +44,7 @@ const App = (props) => {
       setNewNote("");
     });
   };
+
   const toggleImportance = (id) => {
     // console.log(`Toggle importance of note with id : ${id}`);
     const note = notes.find((note) => note.id === id);
@@ -54,13 +55,21 @@ const App = (props) => {
       .update(id, changedNote)
       .then((newNote) => {
         setNotes(notes.map((note) => (note.id === id ? newNote : note)));
+        setNotification({
+          type: "success",
+          message: `Note : ${note.content} updated !`,
+        });
+        setTimeout(() => {
+          setNotification(null);
+        }, 5000);
       })
       .catch((error) => {
-        setErrMessage(
-          `Note : ${note.content} was already deleted from the server !`
-        );
+        setNotification({
+          type: "error",
+          message: `Note : ${note.content} was already deleted from the server !`,
+        });
         setTimeout(() => {
-          setErrMessage(null);
+          setNotification(null);
         }, 5000);
         setNotes(notes.filter((note) => note.id !== id));
       });
@@ -68,24 +77,34 @@ const App = (props) => {
 
   const handleLogin = async (event) => {
     event.preventDefault();
-    console.log(
-      `Logging in with username : ${username} and password : ${password}`
-    );
+    // console.log(
+    //   `Logging in with username : ${username} and password : ${password}`
+    // );
     try {
       const user = await loginService.login({
         username,
         password,
       });
-      console.log(`User >>> ${JSON.stringify(user)}`);
       window.localStorage.setItem("loggedNoteAppUser", JSON.stringify(user));
+      // console.log(`User >>> ${user}`);
       noteService.setToken(user.token);
+      setNotification({
+        type: "success",
+        message: `Login successful for ${user.name}`,
+      });
+      setTimeout(() => {
+        setNotification(null);
+      }, 5000);
       setUser(user);
       setUsername("");
       setPassword("");
     } catch (error) {
-      setErrMessage("Wrong credentials !");
+      setNotification({
+        type: "error",
+        message: "Wrong credentials !",
+      });
       setTimeout(() => {
-        setErrMessage(null);
+        setNotification(null);
       }, 5000);
     }
   };
@@ -93,12 +112,18 @@ const App = (props) => {
   return (
     <div>
       <h1>Notes</h1>
-      <Notification message={errMessage} />
+      <Notification notify={notification} />
       {/* render login form if no user logged in */}
       {/* render note form if user is logged in */}
       {user === null ? (
         <Togglable buttonLabel="Login">
-            <LoginForm username={username} password={password} handleLogin={handleLogin} handleUsernameChange={({target}) => setUsername(target.value)} handlePasswordChange={({target}) => setPassword(target.value)}/>
+          <LoginForm
+            username={username}
+            password={password}
+            handleLogin={handleLogin}
+            handleUsernameChange={({ target }) => setUsername(target.value)}
+            handlePasswordChange={({ target }) => setPassword(target.value)}
+          />
         </Togglable>
       ) : (
         <div>
@@ -106,7 +131,7 @@ const App = (props) => {
             User : <em>{user.name}</em> logged in ...
           </p>
           <Togglable buttonLabel="new note">
-            <NoteForm createNote={addNote}/>
+            <NoteForm createNote={addNote} />
           </Togglable>
         </div>
       )}
