@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 const LoginForm = ({
   handleLogin,
   handleUsernameChange,
@@ -27,7 +28,7 @@ const LoginForm = ({
       </div>
       <button type="submit" onSubmit={handleLogin}>Login</button>
     </form>
-  );
-};
+  )
+}
 
-export default LoginForm;
+export default LoginForm

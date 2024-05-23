@@ -1,82 +1,91 @@
-import { useState, useEffect } from "react";
-import Note from "./components/Note";
-import Notification from "./components/Notification";
-import Togglable from "./components/Togglable";
-import LoginForm from "./components/LoginForm";
-import NoteForm from "./components/NoteForm";
-import Footer from "./components/Footer";
-import noteService from "./services/notes";
-import loginService from "./services/login";
+import { useState, useEffect, useRef } from 'react'
+import Note from './components/Note'
+import Notification from './components/Notification'
+import Togglable from './components/Togglable'
+import LoginForm from './components/LoginForm'
+import NoteForm from './components/NoteForm'
+import Footer from './components/Footer'
+import noteService from './services/notes'
+import loginService from './services/login'
 
-const App = (props) => {
-  const [notes, setNotes] = useState([]);
-  const [newNote, setNewNote] = useState("a new note...");
-  const [showAll, setShowAll] = useState(true);
-  const [notification, setNotification] = useState(null);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [user, setUser] = useState(null);
+const App = () => {
+  const [notes, setNotes] = useState([])
+  const [newNote, setNewNote] = useState('a new note...')
+  const [showAll, setShowAll] = useState(true)
+  const [notification, setNotification] = useState(null)
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [user, setUser] = useState(null)
 
   const hook = () => {
     noteService.getAll().then((initialNotes) => {
-      setNotes(initialNotes);
-    });
-  };
+      setNotes(initialNotes)
+    })
+  }
 
-  useEffect(hook, []);
+  useEffect(hook, [])
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem("loggedNoteAppUser");
+    const loggedUserJSON = window.localStorage.getItem('loggedNoteAppUser')
     if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON);
-      setUser(user);
-      noteService.setToken(user.token);
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+      noteService.setToken(user.token)
     }
-  }, []);
+  }, [])
+
+  const noteFormRef = useRef()
+
+  const noteForm = () => (
+    <Togglable buttonLabel="new note" ref={noteFormRef}>
+      <NoteForm createNote={addNote} />
+    </Togglable>
+  )
 
   const notesToShow = showAll
     ? notes
-    : notes.filter((note) => note.important === true);
+    : notes.filter((note) => note.important === true)
 
   const addNote = (noteObject) => {
+    noteFormRef.current.toggleVisibility()
     noteService.create(noteObject).then((newNote) => {
-      setNotes(notes.concat(newNote));
-      setNewNote("");
-    });
-  };
+      setNotes(notes.concat(newNote))
+      setNewNote('')
+    })
+  }
 
   const toggleImportance = (id) => {
     // console.log(`Toggle importance of note with id : ${id}`);
-    const note = notes.find((note) => note.id === id);
+    const note = notes.find((note) => note.id === id)
     // change the note important property ; below creates a shallow copy of the old note object.
-    const changedNote = { ...note, important: !note.important };
+    const changedNote = { ...note, important: !note.important }
     // make a PUT request to change the notes
     noteService
       .update(id, changedNote)
       .then((newNote) => {
-        setNotes(notes.map((note) => (note.id === id ? newNote : note)));
+        setNotes(notes.map((note) => (note.id === id ? newNote : note)))
         setNotification({
-          type: "success",
+          type: 'success',
           message: `Note : ${note.content} updated !`,
-        });
+        })
         setTimeout(() => {
-          setNotification(null);
-        }, 5000);
+          setNotification(null)
+        }, 5000)
       })
       .catch((error) => {
         setNotification({
-          type: "error",
+          type: 'error',
           message: `Note : ${note.content} was already deleted from the server !`,
-        });
+        })
         setTimeout(() => {
-          setNotification(null);
-        }, 5000);
-        setNotes(notes.filter((note) => note.id !== id));
-      });
-  };
+          setNotification(null)
+        }, 5000)
+        setNotes(notes.filter((note) => note.id !== id))
+      })
+  }
 
   const handleLogin = async (event) => {
-    event.preventDefault();
+    event.preventDefault()
     // console.log(
     //   `Logging in with username : ${username} and password : ${password}`
     // );
@@ -84,30 +93,30 @@ const App = (props) => {
       const user = await loginService.login({
         username,
         password,
-      });
-      window.localStorage.setItem("loggedNoteAppUser", JSON.stringify(user));
+      })
+      window.localStorage.setItem('loggedNoteAppUser', JSON.stringify(user))
       // console.log(`User >>> ${user}`);
-      noteService.setToken(user.token);
+      noteService.setToken(user.token)
       setNotification({
-        type: "success",
+        type: 'success',
         message: `Login successful for ${user.name}`,
-      });
+      })
       setTimeout(() => {
-        setNotification(null);
-      }, 5000);
-      setUser(user);
-      setUsername("");
-      setPassword("");
+        setNotification(null)
+      }, 5000)
+      setUser(user)
+      setUsername('')
+      setPassword('')
     } catch (error) {
       setNotification({
-        type: "error",
-        message: "Wrong credentials !",
-      });
+        type: 'error',
+        message: 'Wrong credentials !',
+      })
       setTimeout(() => {
-        setNotification(null);
-      }, 5000);
+        setNotification(null)
+      }, 5000)
     }
-  };
+  }
 
   return (
     <div>
@@ -130,13 +139,11 @@ const App = (props) => {
           <p>
             User : <em>{user.name}</em> logged in ...
           </p>
-          <Togglable buttonLabel="new note">
-            <NoteForm createNote={addNote} />
-          </Togglable>
+          {noteForm()}
         </div>
       )}
       <button onClick={() => setShowAll(!showAll)}>
-        Show {showAll ? "Important" : "All"}
+        Show {showAll ? 'Important' : 'All'}
       </button>
       {notes ? (
         <ul>
@@ -149,12 +156,12 @@ const App = (props) => {
           ))}
         </ul>
       ) : (
-        <p style={{ fontColor: "red" }}>{"No notes found to render !"}</p>
+        <p style={{ fontColor: 'red' }}>{'No notes found to render !'}</p>
       )}
 
       <Footer />
     </div>
-  );
-};
+  )
+}
 
-export default App;
+export default App
