@@ -14,6 +14,7 @@ const App = () => {
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
   const [alert,setAlert] = useState({});
+  const [showForm, setShowForm] = useState(false);
 
   //  Fetch all the notes when app loads
   useEffect(() => {
@@ -81,8 +82,9 @@ const App = () => {
     }
   };
 
-  const handleCreateNote = async (event) => {
+  const handleCreateBlog = async (event) => {
     event.preventDefault();
+    setShowForm(!showForm);
     try {
       const newBlog = { title, author, url };
       const response = await blogService.create(newBlog, token);
@@ -148,8 +150,8 @@ const App = () => {
             </button>
           </div>
           <div>
-            <h2>Create New Note</h2>
-            <form onSubmit={handleCreateNote}>
+            <button onClick={() => {setShowForm(!showForm)}}>Create New Blog</button>
+            {showForm ? <form onSubmit={handleCreateBlog}>
               <label htmlFor="title">Title : </label>
               <input
                 type="text"
@@ -176,7 +178,8 @@ const App = () => {
                 onChange={({ target }) => setUrl(target.value)}
               />
               <button type="submit">Create</button>
-            </form>
+              <button onClick={() => setShowForm(!showForm)}>Cancel</button>
+            </form> : <></>}
           </div>
           <ul>
             {blogs.map((blog) => (
