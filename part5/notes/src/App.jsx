@@ -34,6 +34,8 @@ const App = () => {
     }
   }, [])
 
+  // Problem statement : We need to hide the note form when a new note button is created upon clicking the button
+
   const noteFormRef = useRef()
 
   const noteForm = () => (
