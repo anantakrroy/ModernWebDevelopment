@@ -18,6 +18,7 @@ const App = () => {
   const [url, setUrl] = useState("");
   const [alert, setAlert] = useState({});
   const [showForm, setShowForm] = useState(false);
+  const [sort, setSort] = useState("");
 
   //  Fetch all the blogs when app loads
   useEffect(() => {
@@ -42,6 +43,8 @@ const App = () => {
       setToken(user.data.token);
     }
   }, []);
+
+  // console.log(blogs);
 
   // reference to blog form
   const ref = useRef();
@@ -135,6 +138,19 @@ const App = () => {
   const handleTitle = (e) => setTitle(e.target.value);
   const handleUrl = (e) => setUrl(e.target.value);
 
+  // Sorting handler
+  const sortByLikes = (e) => {
+    console.log(e);
+    if (e.target.value === "Descending") {
+      setSort("Descending");
+      setBlogs(blogs.sort((a, b) => b.likes - a.likes));
+    }
+    if (e.target.value === "Ascending") {
+      setSort("Ascending");
+      setBlogs(blogs.sort((a, b) => a.likes - b.likes));
+    }
+  };
+
   return (
     <div>
       {alert.message ? (
@@ -171,6 +187,21 @@ const App = () => {
                 handleCreateBlog={handleCreateBlog}
               />
             </Togglable>
+          </div>
+          <div>
+            <label htmlFor="sort">
+              <strong>Sort By Likes :</strong>{" "}
+            </label>
+            <select
+              name="sortLikes"
+              id="sort"
+              value={sort}
+              onChange={sortByLikes}
+            >
+              {/* <option value=""></option> */}
+              <option value="Ascending">Ascending</option>
+              <option value="Descending">Descending</option>
+            </select>
           </div>
           <ul>
             {blogs.map((blog) => (
