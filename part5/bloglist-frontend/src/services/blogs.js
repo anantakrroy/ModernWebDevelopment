@@ -18,4 +18,12 @@ const create = (blog,token) => {
   return request.then(response => response.data)
 }
 
-export default { getAll, create }
+const update = (updatedBlog, id, token) => {
+  const headers = {
+    "Authorization" : `Bearer ${token}`
+  }
+  const request = axios.put(`${baseUrl}/${id}`,{...updatedBlog}, {headers})
+  return request.then(response => response.data)
+}
+
+export default { getAll, create, update }

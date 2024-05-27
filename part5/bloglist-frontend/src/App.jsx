@@ -29,7 +29,7 @@ const App = () => {
           type: "error",
           message: `Error fetching blogs ... ${err.message}`,
         });
-        setTimeout(() => setAlert({}), 5000)
+        setTimeout(() => setAlert({}), 5000);
       });
   }, []);
 
@@ -46,6 +46,7 @@ const App = () => {
   // reference to blog form
   const ref = useRef();
 
+  // Login handler
   const handleLogin = async (event) => {
     event.preventDefault();
     try {
@@ -76,6 +77,7 @@ const App = () => {
     }
   };
 
+  // Logout handler
   const handleLogout = async (event) => {
     event.preventDefault();
     try {
@@ -99,6 +101,7 @@ const App = () => {
     }
   };
 
+  // Create blog handler
   const handleCreateBlog = async (event) => {
     event.preventDefault();
     setShowForm(!showForm);
