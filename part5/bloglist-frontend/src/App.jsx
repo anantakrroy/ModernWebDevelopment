@@ -21,7 +21,16 @@ const App = () => {
 
   //  Fetch all the blogs when app loads
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs.reverse()));
+    blogService
+      .getAll()
+      .then((blogs) => setBlogs(blogs.reverse()))
+      .catch((err) => {
+        setAlert({
+          type: "error",
+          message: `Error fetching blogs ... ${err.message}`,
+        });
+        setTimeout(() => setAlert({}), 5000)
+      });
   }, []);
 
   // check if local storage contains valid user

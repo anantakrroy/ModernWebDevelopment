@@ -12,3 +12,14 @@
     border: solid green 2px;
     background-color: rgb(218, 228, 219);
 }
+
+.blog {
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 2px solid rgb(100, 93, 93);
+    border-radius: 3px;
+}
+
+a {
+    padding-right: 20px;
+}
