@@ -224,7 +224,7 @@ const App = () => {
                 <li key={blog.id}>
                   <Blog blog={blog} />
                   {user.data.name === blog.user.name ? (
-                    <button onClick={() => handleDeleteBlog(blog)}>
+                    <button className="deleteBtn" onClick={() => handleDeleteBlog(blog)}>
                       {" "}
                       Delete{" "}
                     </button>

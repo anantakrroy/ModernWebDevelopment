@@ -27,3 +27,8 @@ a {
 button {
     margin: 4px;
 }
+
+.deleteBtn {
+    background-color: red;
+    color: white
+}
