@@ -41,6 +41,7 @@ const App = () => {
       const user = JSON.parse(userInStorage);
       setUser(user);
       setToken(user.data.token);
+      // console.log(`User >>>> ${JSON.stringify(user)}`);
     }
   }, []);
 
@@ -151,6 +152,19 @@ const App = () => {
     }
   };
 
+  // Delete blog handler
+  const handleDeleteBlog = async (blog) => {
+    // console.log(`delete... ${JSON.stringify(blog)}`);
+    if (window.confirm(`Delete blog : ${blog.title} ?`)) {
+      try {
+        await blogService.remove(blog, token);
+        setBlogs(blogs.filter((b) => b.id !== blog.id));
+      } catch (error) {
+        alert(`Error deleting blog .... ${error}`);
+      }
+    }
+  };
+
   return (
     <div>
       {alert.message ? (
@@ -204,11 +218,22 @@ const App = () => {
             </select>
           </div>
           <ul>
-            {blogs.map((blog) => (
-              <li key={blog.id}>
-                <Blog blog={blog} />
-              </li>
-            ))}
+            {blogs.map((blog) => {
+              // console.log(JSON.stringify(blog));
+              return (
+                <li key={blog.id}>
+                  <Blog blog={blog} />
+                  {user.data.name === blog.user.name ? (
+                    <button onClick={() => handleDeleteBlog(blog)}>
+                      {" "}
+                      Delete{" "}
+                    </button>
+                  ) : (
+                    <></>
+                  )}
+                </li>
+              );
+            })}
           </ul>
         </>
       )}

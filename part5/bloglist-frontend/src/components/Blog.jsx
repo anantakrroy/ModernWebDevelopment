@@ -4,7 +4,9 @@ import blogService from "./../services/blogs";
 const Blog = ({ blog }) => {
   const [isDetailView, setDetailView] = useState(false);
   const [view, setView] = useState(blog);
-  const token = window.localStorage.getItem("loggedInUser");
+
+  let token = JSON.parse(window.localStorage.getItem("loggedInUser")).data
+    .token;
 
   const showDetail = () => {
     setDetailView(!isDetailView);
