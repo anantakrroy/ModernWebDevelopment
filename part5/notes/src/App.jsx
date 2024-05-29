@@ -39,7 +39,7 @@ const App = () => {
   const noteFormRef = useRef()
 
   const noteForm = () => (
-    <Togglable buttonLabel="new note" ref={noteFormRef}>
+    <Togglable ref={noteFormRef} buttonLabel="Login">
       <NoteForm createNote={addNote} />
     </Togglable>
   )
