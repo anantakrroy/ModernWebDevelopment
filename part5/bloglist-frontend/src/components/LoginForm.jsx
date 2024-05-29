@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState } from 'react'
 
-const LoginForm = ({username, password, handleUsernameChange, handlePasswordChange, handleLogin }) => {
+const LoginForm = ({ username, password, handleUsernameChange, handlePasswordChange, handleLogin }) => {
   return (
     <div>
       <h2>Log in to App</h2>
@@ -30,7 +30,7 @@ const LoginForm = ({username, password, handleUsernameChange, handlePasswordChan
         <button type="submit" onSubmit={handleLogin}>Login</button>
       </form>
     </div>
-  );
-};
+  )
+}
 
-export default LoginForm;
+export default LoginForm

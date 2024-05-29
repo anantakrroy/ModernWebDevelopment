@@ -1,4 +1,4 @@
-const BlogForm = ({title, author, url, handleCreateBlog, handleTitle, handleAuthor, handleUrl}) => {
+const BlogForm = ({ title, author, url, handleCreateBlog, handleTitle, handleAuthor, handleUrl }) => {
   return (
     <form onSubmit={handleCreateBlog}>
       <label htmlFor="title">Title : </label>
@@ -28,7 +28,7 @@ const BlogForm = ({title, author, url, handleCreateBlog, handleTitle, handleAuth
       />
       <button type="submit">Create</button>
     </form>
-  );
-};
+  )
+}
 
-export default BlogForm;
+export default BlogForm

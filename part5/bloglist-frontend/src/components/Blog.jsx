@@ -1,16 +1,16 @@
-import { useState } from "react";
-import blogService from "./../services/blogs";
+import { useState } from 'react'
+import blogService from './../services/blogs'
 
 const Blog = ({ blog }) => {
-  const [isDetailView, setDetailView] = useState(false);
-  const [view, setView] = useState(blog);
+  const [isDetailView, setDetailView] = useState(false)
+  const [view, setView] = useState(blog)
 
-  let token = JSON.parse(window.localStorage.getItem("loggedInUser")).data
-    .token;
+  let token = JSON.parse(window.localStorage.getItem('loggedInUser')).data
+    .token
 
   const showDetail = () => {
-    setDetailView(!isDetailView);
-  };
+    setDetailView(!isDetailView)
+  }
 
   const updateLikeCount = async (blog, id) => {
     try {
@@ -20,30 +20,30 @@ const Blog = ({ blog }) => {
         likes: ++blog.likes,
         author: blog.author,
         user: blog.user.id,
-      };
-      const response = await blogService.update(updatedBlog, id, token);
-      setView(response);
+      }
+      const response = await blogService.update(updatedBlog, id, token)
+      setView(response)
     } catch (error) {
-      alert(error);
+      alert(error)
     }
-  };
+  }
 
   return (
     <div className="blog">
-      <a href={blog.url} target="_blank">
+      <a href={blog.url} target="_blank" rel="noreferrer">
         {blog.title} by {blog.author}
       </a>
       <button id={blog.id} onClick={showDetail}>
-        {" "}
-        {isDetailView ? "Hide" : "View"}{" "}
+        {' '}
+        {isDetailView ? 'Hide' : 'View'}{' '}
       </button>
       {isDetailView ? (
         <div>
-          <a href={blog.url} target="_blank">
+          <a href={blog.url} target="_blank" rel="noreferrer">
             {blog.url}
           </a>
           <p>
-            Likes : {blog.likes}{" "}
+            Likes : {blog.likes}{' '}
             <button onClick={() => updateLikeCount(blog, blog.id)}>Like</button>
           </p>
           <p>{blog.user.name}</p>
@@ -52,7 +52,7 @@ const Blog = ({ blog }) => {
         <></>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default Blog;
+export default Blog
