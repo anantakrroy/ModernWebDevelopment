@@ -34,12 +34,12 @@ const App = () => {
     }
   }, [])
 
-  // Problem statement : We need to hide the note form when a new note button is created upon clicking the button
+  // Problem statement : We need to hide the note form when Save button is clicked
 
   const noteFormRef = useRef()
 
   const noteForm = () => (
-    <Togglable ref={noteFormRef} buttonLabel="Login">
+    <Togglable ref={noteFormRef} buttonLabel="New Note">
       <NoteForm createNote={addNote} />
     </Togglable>
   )
