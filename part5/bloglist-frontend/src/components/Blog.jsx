@@ -5,9 +5,6 @@ const Blog = ({ blog }) => {
   const [isDetailView, setDetailView] = useState(false)
   const [view, setView] = useState(blog)
 
-  let token = JSON.parse(window.localStorage.getItem('loggedInUser')).data
-    .token
-
   const showDetail = () => {
     setDetailView(!isDetailView)
   }
@@ -21,6 +18,8 @@ const Blog = ({ blog }) => {
         author: blog.author,
         user: blog.user.id,
       }
+      let token = JSON.parse(window.localStorage.getItem('loggedInUser')).data
+      .token
       const response = await blogService.update(updatedBlog, id, token)
       setView(response)
     } catch (error) {
