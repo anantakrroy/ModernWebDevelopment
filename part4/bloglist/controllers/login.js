@@ -23,7 +23,7 @@ loginRouter.post('/', async (request, response) => {
                 const token = jwt.sign(user, process.env.SECRET)
                 response
                     .status(200)
-                    .json({ token, username: user.username, name: isUser.name })
+                    .json({ token, username: user.username, name: isUser.name, id: user.id })
             } else {
                 response.status(401).json({ error: 'Invalid password !' })
             }
