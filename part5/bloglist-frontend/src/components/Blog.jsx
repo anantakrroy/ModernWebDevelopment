@@ -1,30 +1,11 @@
 import { useState } from 'react'
 import blogService from './../services/blogs'
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, handleLikes }) => {
   const [isDetailView, setDetailView] = useState(false)
-  const [view, setView] = useState(blog)
 
   const showDetail = () => {
     setDetailView(!isDetailView)
-  }
-
-  const updateLikeCount = async (blog, id) => {
-    try {
-      const updatedBlog = {
-        title: blog.title,
-        url: blog.url,
-        likes: ++blog.likes,
-        author: blog.author,
-        user: blog.user.id,
-      }
-      let token = JSON.parse(window.localStorage.getItem('loggedInUser')).data
-      .token
-      const response = await blogService.update(updatedBlog, id, token)
-      setView(response)
-    } catch (error) {
-      alert(error)
-    }
   }
 
   return (
@@ -43,7 +24,7 @@ const Blog = ({ blog }) => {
           </a>
           <p>
             Likes : {blog.likes}{' '}
-            <button onClick={() => updateLikeCount(blog, blog.id)}>Like</button>
+            <button className='likeBtn' onClick={() => handleLikes(blog)}>Like</button>
           </p>
           <p>{blog.user.name}</p>
         </div>
