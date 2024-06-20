@@ -56,11 +56,11 @@ describe('Blog component frontend tests : ', () => {
 
   test('Clicking button twice calls event handler on Blog component twice', async () => {
     const user = userEvent.setup()
-    const {container} = render(<Blog blog={blog} handleLikes={mock} />)
+    const { container } = render(<Blog blog={blog} handleLikes={mock} />)
     const viewBtn = screen.getByText(/View/)
     // screen.debug(viewBtn)
     await user.click(viewBtn)
-    const likeBtn = container.querySelector(".likeBtn")
+    const likeBtn = container.querySelector('.likeBtn')
     // screen.debug(likeBtn)
     await user.click(likeBtn)
     await user.click(likeBtn)
