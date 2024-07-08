@@ -120,6 +120,30 @@ const App = () => {
     }
   }
 
+  // logout user
+  const handleLogout = async (event) => {
+    event.preventDefault()
+    try {
+      window.localStorage.removeItem('loggedNoteAppUser')
+      setNotification({
+        type: 'success',
+        message: `${user.name} logged out !`,
+      })
+      setUsername('')
+      setPassword('')
+      setUser(null)
+      setTimeout(() => setNotification(null), 5000)
+    } catch (error) {
+      setNotification({
+        type: 'error',
+        message: `Error logging out : ${error}!`,
+      })
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
+    }
+  }
+
   return (
     <div>
       <h1>Notes</h1>
@@ -141,24 +165,27 @@ const App = () => {
           <p>
             User : <em>{user.name}</em> logged in ...
           </p>
+          <button id="logout" onClick={handleLogout}>
+            Logout
+          </button>
           {noteForm()}
+          <button onClick={() => setShowAll(!showAll)}>
+            Show {showAll ? 'Important' : 'All'}
+          </button>
+          {notes ? (
+            <ul>
+              {notesToShow.map((note) => (
+                <Note
+                  key={note.id}
+                  note={note}
+                  toggleImportance={() => toggleImportance(note.id)}
+                />
+              ))}
+            </ul>
+          ) : (
+            <p style={{ fontColor: 'red' }}>{'No notes found to render !'}</p>
+          )}
         </div>
-      )}
-      <button onClick={() => setShowAll(!showAll)}>
-        Show {showAll ? 'Important' : 'All'}
-      </button>
-      {notes ? (
-        <ul>
-          {notesToShow.map((note) => (
-            <Note
-              key={note.id}
-              note={note}
-              toggleImportance={() => toggleImportance(note.id)}
-            />
-          ))}
-        </ul>
-      ) : (
-        <p style={{ fontColor: 'red' }}>{'No notes found to render !'}</p>
       )}
 
       <Footer />
