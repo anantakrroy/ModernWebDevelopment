@@ -1,7 +1,16 @@
 const { describe, beforeEach, test, expect } = require("@playwright/test");
 
 describe("Note App", () => {
-  beforeEach(async({page}) => {
+  beforeEach(async({page, request}) => {
+    await request.post('http://localhost:3001/api/testing/reset')
+    await request.post('http://localhost:3001/api/users', {
+      data: {
+        name: 'Bohe Root',
+        username: 'rootyroot',
+        password: 'root123'
+      }
+    })
+
     await page.goto('http://localhost:5173')
   })
 
@@ -44,13 +53,26 @@ describe("Note App", () => {
       await page.getByRole('button', {name: /login/i}).click()
     })
 
-    test(' A new note can be created', async({page}) => {
+    test('A new note can be created', async({page}) => {
       await page.getByRole('button', {name: /new note/i}).click()
       await page.getByTestId('newnote').fill('This note is created using playwright')
       await page.getByRole('button', {name: /save/i}).click()
 
       await expect(page.getByText('This note is created using playwright')).toBeVisible()
     })
+    
+    describe('A note exists ...', () => {
+      beforeEach(async({page}) => {
+        await page.getByRole('button', {name : /new note/i}).click()
+        await page.getByTestId('newnote').fill('Another note created by Playwright')
+        await page.getByRole('button', {name: /save/i}).click()
+      })
 
+      test('Change importance of note', async({page}) => {
+        await page.getByRole('button', {name: /make not important/i}).click()
+        await expect(page.getByRole('button', {name: /make important/i})).toBeVisible()
+      })
+    })
+  
   })
 });
