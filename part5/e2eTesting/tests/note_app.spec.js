@@ -73,6 +73,24 @@ describe("Note App", () => {
         await expect(page.getByRole('button', {name: /make important/i})).toBeVisible()
       })
     })
-  
+  })
+
+  test.only('Login fails when the password is wrong' , async({page}) => {
+    await page.getByRole('button', {name: /login/i}).click()
+    await page.getByTestId('username').fill('rootyroot')
+    await page.getByTestId('password').fill('rixn1332')
+    await page.getByRole('button', {name: /login/i}).click()
+    
+    await expect(page.getByText('Wrong credentials !')).toBeVisible()
+
+    // alternate : test if the error message is printed in its own css class.
+    const errorDiv = await page.locator('.error')
+    await expect(errorDiv).toContainText('Wrong credentials !')
+    // test is the locator contains the CSS styles
+    await expect(errorDiv).toHaveCSS('border-style', 'solid')
+    await expect(errorDiv).toHaveCSS('border-radius', '5px')
+    await expect(errorDiv).toHaveCSS('color', 'rgb(255, 0, 0)')
+    // ensure that the user is not logged in
+    await expect(page.getByText('Bohe Root logged in')).not.toBeVisible()
   })
 });
