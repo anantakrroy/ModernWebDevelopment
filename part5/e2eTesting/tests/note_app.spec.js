@@ -1,4 +1,5 @@
 const { describe, beforeEach, test, expect } = require("@playwright/test");
+import {loginWith, createNote} from './helper'
 
 describe("Note App", () => {
   beforeEach(async({page, request}) => {
@@ -11,7 +12,9 @@ describe("Note App", () => {
       }
     })
 
-    await page.goto('http://localhost:5173')
+    // can use relative urls now because of baseurl definition in
+    // playwright.config.js file
+    await page.goto('/')
   })
 
   test("front page can be opened", async ({ page }) => {
@@ -47,25 +50,17 @@ describe("Note App", () => {
 
   describe('When the user is logged in ...', () => {
     beforeEach(async({page}) => {
-      await page.getByRole('button', {name: /login/i}).click()
-      await page.getByTestId('username').fill('rootyroot')
-      await page.getByTestId('password').fill('root123')
-      await page.getByRole('button', {name: /login/i}).click()
+      await loginWith(page, 'rootyroot','root123')
     })
 
     test('A new note can be created', async({page}) => {
-      await page.getByRole('button', {name: /new note/i}).click()
-      await page.getByTestId('newnote').fill('This note is created using playwright')
-      await page.getByRole('button', {name: /save/i}).click()
-
+      await createNote(page, 'This note is created using playwright')
       await expect(page.getByText('This note is created using playwright')).toBeVisible()
     })
     
     describe('A note exists ...', () => {
       beforeEach(async({page}) => {
-        await page.getByRole('button', {name : /new note/i}).click()
-        await page.getByTestId('newnote').fill('Another note created by Playwright')
-        await page.getByRole('button', {name: /save/i}).click()
+        await createNote(page, 'Another note created by Playwright')
       })
 
       test('Change importance of note', async({page}) => {
@@ -75,12 +70,8 @@ describe("Note App", () => {
     })
   })
 
-  test.only('Login fails when the password is wrong' , async({page}) => {
-    await page.getByRole('button', {name: /login/i}).click()
-    await page.getByTestId('username').fill('rootyroot')
-    await page.getByTestId('password').fill('rixn1332')
-    await page.getByRole('button', {name: /login/i}).click()
-    
+  test('Login fails when the password is wrong' , async({page}) => {
+    await loginWith(page, 'rootyroot', 'fj34')
     await expect(page.getByText('Wrong credentials !')).toBeVisible()
 
     // alternate : test if the error message is printed in its own css class.
