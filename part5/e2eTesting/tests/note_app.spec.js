@@ -3,8 +3,10 @@ import {loginWith, createNote} from './helper'
 
 describe("Note App", () => {
   beforeEach(async({page, request}) => {
-    await request.post('http://localhost:3001/api/testing/reset')
-    await request.post('http://localhost:3001/api/users', {
+    // note : relative urls can be used here because the vite config proxy is setup such that all requests to locahost:5173/api
+    // are directed to backend localhost:3001/api
+    await request.post('/api/testing/reset')
+    await request.post('/api/users', {
       data: {
         name: 'Bohe Root',
         username: 'rootyroot',
