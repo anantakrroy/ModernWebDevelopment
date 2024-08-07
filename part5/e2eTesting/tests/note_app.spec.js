@@ -70,6 +70,19 @@ describe("Note App", () => {
         await expect(page.getByRole('button', {name: /make important/i})).toBeVisible()
       })
     })
+
+    describe('Several notes exist...', () => {
+      beforeEach(async({page}) => {
+        await createNote(page, 'First note is created', true)
+        await createNote(page, 'Second note is created', true)
+      })
+
+      test('One of those can be made non important', async({page}) => {
+        const noteOne = await page.getByText('First note is created')
+        await noteOne.getByRole('button', {name : /make not important/i}).click()
+        await expect(noteOne.getByText(/make important/i)).toBeVisible()
+      })
+    })
   })
 
   test('Login fails when the password is wrong' , async({page}) => {
