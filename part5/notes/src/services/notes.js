@@ -5,7 +5,10 @@ const baseUrl = '/api/notes'
 let token = null
 
 const setToken = (newToken) => {
+  console.log('setToken inside note service called .....')
   token = `Bearer ${newToken}`
+  console.log('token inside note service set to >>> ', token);
+  
 }
 
 
@@ -15,10 +18,12 @@ const getAll = () => {
 }
 
 const create = async (newObject) => {
+  console.log('Create service method hit .....')
   console.log(`TOKEN >>> ${token}`)
   const config = {
     headers: { Authorization: token },
   }
+  console.log('Is config header set correctly ? ' , JSON.stringify(config))
   const response = await axios.post(baseUrl, newObject, config)
   return response.data
 }

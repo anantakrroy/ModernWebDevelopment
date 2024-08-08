@@ -73,14 +73,17 @@ describe("Note App", () => {
 
     describe('Several notes exist...', () => {
       beforeEach(async({page}) => {
-        await createNote(page, 'First note is created', true)
-        await createNote(page, 'Second note is created', true)
+        await createNote(page, 'First note is created')
+        await createNote(page, 'Second note is created')
       })
 
       test('One of those can be made non important', async({page}) => {
-        const noteOne = await page.getByText('First note is created')
-        await noteOne.getByRole('button', {name : /make not important/i}).click()
-        await expect(noteOne.getByText(/make important/i)).toBeVisible()
+        // since the note content is now inside a 'span'
+        const noteOne = page.getByText('First note is created')
+        const noteElement = noteOne.locator('..')
+        
+        await noteElement.getByRole('button', {name :'make not important'}).click()
+        await expect(noteElement.getByText('make important')).toBeVisible()
       })
     })
   })
