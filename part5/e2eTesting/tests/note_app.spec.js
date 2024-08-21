@@ -78,6 +78,7 @@ describe("Note App", () => {
       })
 
       test('One of those can be made non important', async({page}) => {
+        await page.pause()
         // since the note content is now inside a 'span'
         const noteOne = page.getByText('First note is created')
         const noteElement = noteOne.locator('..')

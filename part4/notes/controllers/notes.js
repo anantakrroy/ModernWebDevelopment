@@ -36,7 +36,7 @@ notesRouter.post('/',async (request, response) => {
     })
   }
   const user = await User.findById(decodedToken.id)
-  console.log('BACKEND : User from decoded token >> ', JSON.stringify(user))
+  console.log('BACKEND : Does user from decoded token exist in the database >> ', JSON.stringify(user))
   console.log(`User from token >>> ${JSON.stringify(user)}`)
   const note = new Note({
     content: body.content,
@@ -45,6 +45,7 @@ notesRouter.post('/',async (request, response) => {
   })
   const savedNote = await note.save()
   user.notes =  user.notes.concat(savedNote._id)
+  // console.log('user', user ,'\n notes after saving >>>> ', user.notes)
   await user.save()
   response.status(201).send(savedNote)
 })
