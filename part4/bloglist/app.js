@@ -28,6 +28,13 @@ app.use('/api/login', loginRouter)
 app.use('/api/blogs', blogsRouter)
 app.use('/api/users', usersRouter)
 
+if(process.env.NODE_ENV === 'test') {
+    console.log('Testing ... ');
+    
+    const resetRoute = require('./controllers/testing')
+    app.use('/api/reset', resetRoute)
+}
+
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
 

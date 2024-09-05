@@ -29,7 +29,7 @@ loginRouter.post('/', async (request, response) => {
             }
         }
     } catch (error) {
-        console.log(`Login backend error >>> ${JSON.stringify(error)}`)
+        console.log(`Login backend error >>> ${error.message}`)
     }
 })
 
