@@ -1,5 +1,5 @@
-// @ts-check
 const { test, expect, beforeEach, describe } = require('@playwright/test');
+import {loginWith, createBlog} from './helpers'
 
 
 describe('Blog app', () => {
@@ -37,6 +37,19 @@ describe('Blog app', () => {
       await page.getByRole('button').click()
 
       await expect(page.getByText(`failed to log in ...`)).toBeVisible()
+    })
+  })
+
+  // Logged in user can create blog
+  describe('Logged in user can create new blog', () => {
+    beforeEach(async({page}) => {
+      await loginWith(page, 'rootyroot', 'root123')
+    })
+
+    test('Create new blog', async({page}) => {
+      await createBlog(page, 'Mastering JavaScript: 10 Tips for Cleaner Code', 'Sarah Thompson', 'https://www.techinsightsblog.com/mastering-javascript-tips-sarah-thompson')
+
+      await expect(page.getByRole('link', {name: /Mastering JavaScript: 10 Tips for Cleaner Code/i})).toBeVisible()
     })
   })
 })
