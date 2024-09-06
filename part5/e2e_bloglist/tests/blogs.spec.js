@@ -6,11 +6,19 @@ describe('Blog app', () => {
   beforeEach(async({page, request}) => {
     await page.goto('http://localhost:5173')
     await request.get('/api/reset')
+    // create two users for Ex 5.22
     await request.post('/api/users', {
       data: {
         username: 'rootyroot',
         name: 'Bohe Root',
         password: 'root123'
+      }
+    })
+    await request.post('/api/users', {
+      data: {
+        username: 'evanana',
+        name: 'Ana Evans',
+        password: 'ana123'
       }
     })
   })
@@ -41,7 +49,7 @@ describe('Blog app', () => {
   })
 
   // Logged in user
-  describe('Logged in user can create new blog', () => {
+  describe('Logged in user can', () => {
     beforeEach(async({page}) => {
       await loginWith(page, 'rootyroot', 'root123')
     })
@@ -68,6 +76,15 @@ describe('Blog app', () => {
       page.on('dialog', dialog => dialog.accept())
       await page.getByRole('button', {name: /delete/i}).click()
       await expect(page.getByRole('link', {name: /Mastering JavaScript: 10 Tips for Cleaner Code', 'Sarah Thompson/i})).not.toBeVisible
+    })
+
+    test('Delete button only shown for user who created the blog', async({page}) => {
+      await createBlog(page, 'Mastering JavaScript: 10 Tips for Cleaner Code', 'Sarah Thompson', 'https://www.techinsightsblog.com/mastering-javascript-tips-sarah-thompson')
+      await page.getByRole('button', {name: /logout/i}).click()
+      await loginWith(page, 'evanana', 'ana123')
+      await page.getByRole('button', {name: /view/i}).click()
+
+      await expect(page.getByRole('button', {name: /delete/i})).not.toBeVisible()
     })
   })
 })
