@@ -40,7 +40,7 @@ describe('Blog app', () => {
     })
   })
 
-  // Logged in user can create blog
+  // Logged in user
   describe('Logged in user can create new blog', () => {
     beforeEach(async({page}) => {
       await loginWith(page, 'rootyroot', 'root123')
@@ -50,6 +50,15 @@ describe('Blog app', () => {
       await createBlog(page, 'Mastering JavaScript: 10 Tips for Cleaner Code', 'Sarah Thompson', 'https://www.techinsightsblog.com/mastering-javascript-tips-sarah-thompson')
 
       await expect(page.getByRole('link', {name: /Mastering JavaScript: 10 Tips for Cleaner Code/i})).toBeVisible()
+    })
+
+    test('Like a blog', async({page}) => {
+      await createBlog(page, 'Mastering JavaScript: 10 Tips for Cleaner Code', 'Sarah Thompson', 'https://www.techinsightsblog.com/mastering-javascript-tips-sarah-thompson')
+
+      await page.getByRole('button', {name: /view/i}).click()
+      await page.getByRole('button', {name: /like/i}).click()
+
+      await expect(page.getByText('Likes : 1')).toBeVisible()
     })
   })
 })
