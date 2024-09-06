@@ -60,5 +60,14 @@ describe('Blog app', () => {
 
       await expect(page.getByText('Likes : 1')).toBeVisible()
     })
+
+    test('Delete a blog', async({page}) => {
+      await createBlog(page, 'Mastering JavaScript: 10 Tips for Cleaner Code', 'Sarah Thompson', 'https://www.techinsightsblog.com/mastering-javascript-tips-sarah-thompson')
+
+      await page.getByRole('button', {name: /view/i}).click()
+      page.on('dialog', dialog => dialog.accept())
+      await page.getByRole('button', {name: /delete/i}).click()
+      await expect(page.getByRole('link', {name: /Mastering JavaScript: 10 Tips for Cleaner Code', 'Sarah Thompson/i})).not.toBeVisible
+    })
   })
 })
