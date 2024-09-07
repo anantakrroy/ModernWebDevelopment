@@ -57,14 +57,23 @@ blogsRouter.delete('/:id', middleware.userExtractor , async(request, response) =
 })
 
 // update blog
-blogsRouter.put('/:id', async(request, response) => {
+blogsRouter.put('/:id', middleware.userExtractor, async(request, response) => {
     const body = request.body
+    const decoded = jwt.verify(request.token, process.env.SECRET)
+    
+    if(!decoded) {
+        response.status(401).send({error : 'Invalid token !'})
+    }
+    
+    // find the user 
+    const user = await User.findById(request.user.id)
+
     const updatedBlog = {
         title: body.title,
         url: body.url,
         likes: body.likes,
         author: body.author,
-        user: body.user.id
+        user: user
     }
     await Blog.findByIdAndUpdate(request.params.id, updatedBlog, {new:true})
     response.json(updatedBlog)
