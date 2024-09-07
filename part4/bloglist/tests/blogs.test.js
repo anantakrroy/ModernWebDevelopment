@@ -157,14 +157,23 @@ describe('Blog list test suite', () => {
     })
 
     describe('Updation of blogs', () => {
-        test('Updating existing blog is successful', async() => {
+        test('Updating existing blog is successful', async () => {
             const allBlogs = await Blog.find({})
             const idToUpdate = allBlogs[0].id
-            const response =  await api
+
+            const res = await api.post('/api/login').send({
+                username: testUtils.dummyUser.username,
+                password: testUtils.dummyUser.password,
+            })
+            const token = res.body.token
+
+            const response = await api
                 .put(`/api/blogs/${idToUpdate}`)
+                .set('Authorization', `Bearer ${token}`)
                 .send(testUtils.updatedBlog)
                 .expect(200)
-            assert.deepStrictEqual(response.body, testUtils.updatedBlog)
+            const {title,url, likes, author} = response.body
+            assert.deepStrictEqual({title,url, likes, author}, testUtils.updatedBlog)
         })
 
         test('Updating non existing blog returns 404 status', async() => {
