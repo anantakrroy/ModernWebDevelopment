@@ -29,7 +29,7 @@ app.use('/api/blogs', blogsRouter)
 app.use('/api/users', usersRouter)
 
 if(process.env.NODE_ENV === 'test') {
-    console.log('Testing ... ');
+    console.log('Testing in ... ', process.env.NODE_ENV)
     
     const resetRoute = require('./controllers/testing')
     app.use('/api/reset', resetRoute)

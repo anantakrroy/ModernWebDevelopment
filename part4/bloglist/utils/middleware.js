@@ -21,9 +21,6 @@ const tokenExtractor = (request, response, next) => {
 }
 
 const userExtractor = (request, response, next) => {
-    // if(!request.headers.authorization) {
-    //     response.status(401).json({'error' : 'Missing auth token in request header !'})
-    // }
     const auth = request.headers.authorization
     if(auth && auth.startsWith('Bearer ')) {
         const token = auth.replace('Bearer ','')
