@@ -34,7 +34,7 @@ describe('Blog app', () => {
     test('User login success', async({page}) => {
       await page.getByTestId('username').fill('rootyroot')
       await page.getByTestId('password').fill('root123')
-      await page.getByRole('button').click()
+      await page.getByRole('button',{name:/login/i}).click()
 
       await expect(page.getByText('User : Bohe Root is logged in....')).toBeVisible()
     })
@@ -71,7 +71,6 @@ describe('Blog app', () => {
 
     test('Delete a blog', async({page}) => {
       await createBlog(page, 'Mastering JavaScript: 10 Tips for Cleaner Code', 'Sarah Thompson', 'https://www.techinsightsblog.com/mastering-javascript-tips-sarah-thompson')
-
       await page.getByRole('button', {name: /view/i}).click()
       page.on('dialog', dialog => dialog.accept())
       await page.getByRole('button', {name: /delete/i}).click()

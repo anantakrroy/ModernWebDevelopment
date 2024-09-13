@@ -215,14 +215,12 @@ const App = () => {
               value={sort}
               onChange={sortByLikes}
             >
-              {/* <option value=""></option> */}
               <option value="Ascending">Ascending</option>
               <option value="Descending">Descending</option>
             </select>
           </div>
           <ul>
             {blogs.map((blog) => {
-              // console.log(JSON.stringify(blog));
               return (
                 <li key={blog.id}>
                   <Blog blog={blog} handleLikes={handleLikes} />
