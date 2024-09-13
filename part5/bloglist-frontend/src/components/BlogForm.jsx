@@ -25,6 +25,7 @@ const BlogForm = ({  handleCreateBlog }) => {
         type="text"
         name="Title"
         id="title"
+        data-testid="title"
         value={title}
         onChange={handleTitle} required
       />
@@ -33,6 +34,7 @@ const BlogForm = ({  handleCreateBlog }) => {
         type="text"
         name="Author"
         id="author"
+        data-testid="author"
         value={author}
         onChange={handleAuthor} required
       />
@@ -42,6 +44,7 @@ const BlogForm = ({  handleCreateBlog }) => {
         type="url"
         name="Url"
         id="url"
+        data-testid="url"
         value={url}
         onChange={handleUrl} required
       />

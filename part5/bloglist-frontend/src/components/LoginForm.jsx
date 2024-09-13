@@ -11,6 +11,7 @@ const LoginForm = ({ username, password, handleUsernameChange, handlePasswordCha
             type="text"
             name="Username"
             id="username"
+            data-testid='username'
             value={username}
             onChange={handleUsernameChange}
             required
@@ -21,6 +22,7 @@ const LoginForm = ({ username, password, handleUsernameChange, handlePasswordCha
           <input
             type="password"
             id="password"
+            data-testid="password"
             name="Password"
             value={password}
             onChange={handlePasswordChange}
