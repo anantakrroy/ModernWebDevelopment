@@ -85,5 +85,51 @@ describe('Blog app', () => {
 
       await expect(page.getByRole('button', {name: /delete/i})).not.toBeVisible()
     })
+
+    test('Blogs are arranged according to likes', async({page}) => {
+      await createBlog(page, 'Mastering JavaScript: 10 Tips for Cleaner Code', 'Sarah Thompson', 'https://www.techinsightsblog.com/mastering-javascript-tips-sarah-thompson')
+      await createBlog(page, 'Unlocking Creativity: 5 Proven Techniques to Boost Your Imagination', 'Emily Hartman', 'https://www.creativemindsetblog.com/unlock-creativity-techniques-hartman')
+      await createBlog(page, 'The Future of Remote Work: Trends Shaping the Modern Workplace', 'David Sullivan', 'https://www.workrevolution.com/future-remote-work-sullivan')
+
+      // 3 likes
+      await page.getByRole('button', {name: /view/i}).first(0).click()
+      await page.getByRole('button', {name: /like/i}).click()
+      await expect(page.getByText('Likes : 1')).toBeVisible()
+      await page.getByRole('button', {name: /like/i}).click()
+      await expect(page.getByText('Likes : 2')).toBeVisible()
+      await page.getByRole('button', {name: /like/i}).click()
+      await expect(page.getByText('Likes : 3')).toBeVisible()
+      await page.getByRole('button', {name: /hide/i}).click()
+      // 1 likes
+      await page.getByRole('button', {name: /view/i}).nth(1).click()
+      await page.getByRole('button', {name: /like/i}).click()
+      await expect(page.getByText('Likes : 1')).toBeVisible()
+      await page.getByRole('button', {name: /hide/i}).click()
+      // 5 likes
+      await page.getByRole('button', {name: /view/i}).nth(2).click()
+      await page.getByRole('button', {name: /like/i}).click()
+      await expect(page.getByText('Likes : 1')).toBeVisible()
+      await page.getByRole('button', {name: /like/i}).click()
+      await expect(page.getByText('Likes : 2')).toBeVisible()
+      await page.getByRole('button', {name: /like/i}).click()
+      await expect(page.getByText('Likes : 3')).toBeVisible()
+      await page.getByRole('button', {name: /like/i}).click()
+      await expect(page.getByText('Likes : 4')).toBeVisible()
+      await page.getByRole('button', {name: /like/i}).click()
+      await expect(page.getByText('Likes : 5')).toBeVisible()
+      await page.getByRole('button', {name: /hide/i}).click()
+      
+
+      // select descending from dropdown
+      await page.getByRole('combobox').selectOption('Descending')
+
+      // checking the highest is the first link and least liked is the last link
+      const highestLikes = page.locator('a').nth(0)
+      const leastLikes = page.locator('a').nth(2)
+
+      await expect(highestLikes).toHaveText(/Mastering JavaScript: 10 Tips for Cleaner Code/i)
+      await expect(leastLikes).toHaveText(/Unlocking Creativity: 5 Proven Techniques to Boost Your Imagination/i)
+    })
+
   })
 })
