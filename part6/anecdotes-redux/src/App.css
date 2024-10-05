@@ -1,0 +1,30 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+ul {
+  list-style-type: none;
+  display: flex;
+  flex-direction: column;
+}
+
+ul > li {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px;
+    border: solid black 1px;
+    margin: 5px;
+    /* align-items: end; */
+}
+
+button {
+  margin : 5px;
+  align-item: right;
+  color: black;
+  background-color: #009688 !important;
+}
