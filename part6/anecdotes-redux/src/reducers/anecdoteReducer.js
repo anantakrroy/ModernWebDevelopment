@@ -41,6 +41,9 @@ console.log("Anecdotes >>> ", anecdotes);
 
 const anecdoteReducer = (state = anecdotes, action) => {
   switch (action.type) {
+    case 'NEW_ANECDOTE': {
+      return [...state, action.payload]
+    }
     case "VOTE": {
       const toUpdate = state.find((el) => el.id == action.payload.id);
       return state.map(el => el.id == toUpdate.id ? {...toUpdate, votes: toUpdate['votes']+1} : el)

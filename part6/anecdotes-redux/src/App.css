@@ -28,3 +28,18 @@ button {
   color: black;
   background-color: #009688 !important;
 }
+
+form {  
+  display: flex;
+  align-items: center;
+  justify-content: center
+}
+
+.create {
+  background-color: #f44336 !important;
+}
+
+input {
+  height: 5vh;
+  margin-right: 8px;
+}
