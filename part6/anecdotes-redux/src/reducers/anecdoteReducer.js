@@ -46,7 +46,7 @@ const anecdoteReducer = (state = anecdotes, action) => {
     }
     case "VOTE": {
       const toUpdate = state.find((el) => el.id == action.payload.id);
-      return state.map(el => el.id == toUpdate.id ? {...toUpdate, votes: toUpdate['votes']+1} : el)
+      return state.map(el => el.id == toUpdate.id ? {...toUpdate, votes: toUpdate['votes']+1} : el).sort((a,b) => b.votes - a.votes)
     }
     default: {
       return state;
