@@ -39,6 +39,23 @@ let anecdotes = [
 anecdotes = anecdotes.map((el) => (el = { ...el, votes: 0 }));
 console.log("Anecdotes >>> ", anecdotes);
 
+// Actions moved to separate file
+export const incVotes = (id) => {
+  console.log("vote click...");
+  return ({
+    type: "VOTE",
+    payload: { id },
+  });
+};
+
+export const createAnecdote = ({id, anecdote, votes}) => {
+  return ({
+    type: "NEW_ANECDOTE",
+    payload: { id: id, anecdote: anecdote, votes: votes },
+  });
+};
+
+// reducer function to handle actions and make changes to the store
 const anecdoteReducer = (state = anecdotes, action) => {
   switch (action.type) {
     case 'NEW_ANECDOTE': {

@@ -1,34 +1,28 @@
 import "./App.css";
-import { useDispatch, useSelector } from "react-redux";
+import { incVotes, createAnecdote } from "./reducers/anecdoteReducer";
+import {useDispatch, useSelector} from 'react-redux';
 
 function App() {
   const dispatch = useDispatch();
   const anecdotes = useSelector((state) => state);
 
   const handleVote = (id) => {
-    console.log("vote click...");
-    dispatch({
-      type: "VOTE",
-      payload: { id },
-    });
-  };
+    dispatch(incVotes(id))
+  }
 
   const handleCreate = (e) => {
-    e.preventDefault();
-    const newAnecdote = e.target.newanecdote.value;
-    e.target.newanecdote.value = '';
-    const id = anecdotes.length + 1;
-    dispatch({
-      type: "NEW_ANECDOTE",
-      payload: { id: id, anecdote: newAnecdote, votes: 0 },
-    });
-  };
+    e.preventDefault()
+    const anecdote = e.target.newanecdote.value
+    e.target.newanecdote.value = ''
+    const id = anecdotes.length + 1
+    dispatch(createAnecdote({id: id, anecdote: anecdote, votes: 0}))
+  }
 
   return (
     <>
       <h1>Anecdotes Redux App</h1>
       <form onSubmit={handleCreate}>
-        <input type="text" name="newanecdote" />
+        <input type="text" name="newanecdote" required/>
         <button className="create">Create</button>
       </form>
       <ul>
