@@ -24,7 +24,7 @@ ul > li {
 
 button {
   margin : 5px;
-  align-item: right;
+  align-items: right;
   color: black;
   background-color: #009688 !important;
 }
@@ -40,6 +40,8 @@ form {
 }
 
 input {
-  height: 5vh;
+  height: 6vh;
+  width: 35%;
   margin-right: 8px;
+  border-radius: 3px;
 }
