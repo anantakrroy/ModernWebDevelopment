@@ -1,5 +1,35 @@
+const generateId = () => Math.random() * 1000;
+
+const initialNotes = [
+  {
+    content: 'reducer defines how redux store works',
+    important: true,
+    id: generateId(),
+  },
+  {
+    content: 'state of store can contain any data',
+    important: false,
+    id: generateId(),
+  },
+];
+
+// action creator functions are placed here
+export const addNote = (note) => {
+  return {
+    type: 'NEW_NOTE',
+    payload: note
+  }
+}
+
+export const toggleImportance = (id) => {
+  return {
+    type: 'TOGGLE_IMP',
+    payload: { id },
+  };
+};
+
 // A reducer is a function which takes current state and action as params
-const noteReducer = (state = [], action) => {
+const noteReducer = (state = initialNotes, action) => {
   console.log('Action type : ', action.type);
   switch (action.type) {
     case 'NEW_NOTE':
